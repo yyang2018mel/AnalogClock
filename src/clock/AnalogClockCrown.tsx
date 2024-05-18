@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
 import { Backward, Forward, isClockAdjustable } from "./ClockState";
 
@@ -20,10 +20,29 @@ function Triangle({
     cursor: "grab",
   };
 
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const handleMouseDown = () => {
+    setClockState((prev) => {
+      if (!isClockAdjustable(prev)) return prev;
+      const unit = prev.mode === "HourAdjustable" ? "hour" : "minute";
+      const newTime =
+        direction === "up" ? Backward(prev, unit) : Forward(prev, unit);
+      return { ...prev, ...newTime };
+    });
+  };
+
   const style: React.CSSProperties =
     direction === "up"
       ? { ...baseStyle, borderBottom: "10px solid #fff" }
       : { ...baseStyle, borderTop: "10px solid #fff" };
+
+  useEffect(() => {
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId]);
 
   return (
     <div
@@ -31,14 +50,21 @@ function Triangle({
       onDoubleClick={(e) => {
         e.stopPropagation();
       }}
-      onClick={() => {
-        setClockState((prev) => {
-          if (!isClockAdjustable(prev)) return prev;
-          const unit = prev.mode === "HourAdjustable" ? "hour" : "minute";
-          const newTime =
-            direction === "up" ? Backward(prev, unit) : Forward(prev, unit);
-          return { ...prev, ...newTime };
-        });
+      onMouseDown={() => {
+        handleMouseDown();
+        setIntervalId(setInterval(handleMouseDown, 200)); // Fire every 200ms
+      }}
+      onMouseUp={() => {
+        if (intervalId) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
+      }}
+      onMouseLeave={() => {
+        if (intervalId) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
       }}
     />
   );
