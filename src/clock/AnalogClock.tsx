@@ -1,31 +1,13 @@
 import React, { useState } from "react";
-
-type ClockState = {
-  hour: number;
-  minute: number;
-  adjustable: "hour" | "minute" | "none";
-};
-
-function getHandDegreeFromClockState(clockState: ClockState): {
-  hourHandDegree: number;
-  minuteHandDegree: number;
-} {
-  const hourHandDegree = (clockState.hour % 12) * 30;
-  const minuteHandDegree = clockState.minute * 6;
-  const adjustedHourHandDegree = hourHandDegree + (clockState.minute / 60) * 30;
-
-  return {
-    hourHandDegree: adjustedHourHandDegree,
-    minuteHandDegree: minuteHandDegree,
-  };
-}
+import { ClockState, getClockHandDegreeFromTime } from "./ClockState";
+import ClockHand from "./ClockHand";
 
 type ClockStateContext = {
   clockState: ClockState;
   setClockState: React.Dispatch<React.SetStateAction<ClockState>>;
 };
 
-const ClockContext = React.createContext<ClockStateContext | undefined>(
+export const ClockContext = React.createContext<ClockStateContext | undefined>(
   undefined
 );
 
@@ -48,8 +30,8 @@ function UpTriangle(): React.JSX.Element {
       }}
       onClick={(e) => {
         setClockState((prev) => {
-          if (prev.adjustable === "none") return prev;
-          else if (prev.adjustable === "hour") {
+          if (prev.mode === "PausedNoAdjustable") return prev;
+          else if (prev.mode === "HourAdjustable") {
             const newHour = prev.hour === 0 ? 11 : prev.hour - 1;
             return { ...prev, hour: newHour };
           } else {
@@ -89,8 +71,8 @@ function DownTriangle(): React.JSX.Element {
       }}
       onClick={(e) => {
         setClockState((prev) => {
-          if (prev.adjustable === "none") return prev;
-          else if (prev.adjustable === "hour") {
+          if (prev.mode === "PausedNoAdjustable") return prev;
+          else if (prev.mode === "HourAdjustable") {
             const newHour = prev.hour + 1;
             return { ...prev, hour: newHour % 12 };
           } else {
@@ -129,9 +111,9 @@ function Crown({ style }: { style?: React.CSSProperties }): React.JSX.Element {
       style={styleSheet}
       onDoubleClick={() => {
         if (!activated) {
-          setClockState((prev) => ({ ...prev, adjustable: "minute" }));
+          setClockState((prev) => ({ ...prev, mode: "MinuteAdjustable" }));
         } else {
-          setClockState((prev) => ({ ...prev, adjustable: "none" }));
+          setClockState((prev) => ({ ...prev, mode: "PausedNoAdjustable" }));
         }
         setActivated(!activated);
       }}
@@ -155,7 +137,7 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
   const [clockState, setClockState] = useState<ClockState>({
     hour: 0,
     minute: 30,
-    adjustable: "none",
+    mode: "PausedNoAdjustable",
   });
 
   return (
@@ -176,49 +158,11 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
           <div
             style={{
               ...makeClockCentreStyle(12),
-              zIndex: 1,
+              zIndex: 2,
             }}
           />
-          <div
-            onDoubleClick={() => {
-              setClockState((prev) => {
-                if (prev.adjustable === "minute")
-                  return { ...prev, adjustable: "hour" };
-                return prev;
-              });
-            }}
-            style={{
-              ...makeHandStyle(
-                80,
-                6,
-                clockState.adjustable === "hour" ? "green" : "#000"
-              ),
-              transform: `rotate(${
-                getHandDegreeFromClockState(clockState).hourHandDegree
-              }deg)`,
-              zIndex: 0,
-            }}
-          />
-          <div
-            onDoubleClick={() => {
-              setClockState((prev) => {
-                if (prev.adjustable === "hour")
-                  return { ...prev, adjustable: "minute" };
-                return prev;
-              });
-            }}
-            style={{
-              ...makeHandStyle(
-                100,
-                5,
-                clockState.adjustable === "minute" ? "green" : "#000"
-              ),
-              transform: `rotate(${
-                getHandDegreeFromClockState(clockState).minuteHandDegree
-              }deg)`,
-              zIndex: 0,
-            }}
-          />
+          <ClockHand type="hour" zIndex={0} clockSize={clockSize} />
+          <ClockHand type="minute" zIndex={1} clockSize={clockSize} />
         </div>
         <Crown style={{ zIndex: 0 }} />
       </div>
