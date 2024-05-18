@@ -5,9 +5,10 @@ import { ClockContext } from "./Context";
 import AnalogClockCrown from "./AnalogClockCrown";
 import AnalogClockFrame from "./AnalogClockFrame";
 import AnalogClockContainer from "./AnalogClockContainer";
+import { isClockAdjustable } from "./ClockState";
 
 function AnalogClock({ clockSize }: { clockSize: number }): React.JSX.Element {
-  const { clockState, setClockState } = React.useContext(ClockContext)!;
+  const { clockState } = React.useContext(ClockContext)!;
   return (
     <AnalogClockContainer clockSize={clockSize}>
       <AnalogClockCrown zIndex={0} />
@@ -27,10 +28,7 @@ function AnalogClock({ clockSize }: { clockSize: number }): React.JSX.Element {
         <ClockFace
           zIndex={30}
           clockSize={clockSize}
-          showMinute={
-            clockState.mode === "MinuteAdjustable" ||
-            clockState.mode === "HourAdjustable"
-          }
+          showMinute={isClockAdjustable(clockState)}
         />
       </AnalogClockFrame>
     </AnalogClockContainer>

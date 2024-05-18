@@ -3,6 +3,34 @@ export interface TimeState {
   minute: number;
 }
 
+export function Forward(time: TimeState, unit: "hour"|"minute"): TimeState {
+
+  if (unit === "hour") {
+    const newHour = time.hour + 1;
+    return { hour: newHour % 12, minute: time.minute };
+  }
+  
+  const newMinute = time.minute + 1;
+  const newHour = newMinute === 60 ? (time.hour + 1) % 12 : time.hour;
+  return { hour: newHour, minute: newMinute % 60 };
+}
+
+export function Backward(time: TimeState, unit: "hour"|"minute"): TimeState {
+  if (unit === "hour") {
+    const newHour = time.hour - 1;
+    return { hour: newHour < 0 ? 11 : newHour, minute: time.minute };
+  }
+
+  const newMinute = time.minute === 0 ? 59 : time.minute - 1;
+  const newHour = time.minute === 0
+                  ? time.hour === 0
+                    ? 11
+                    : time.hour - 1
+                  : time.hour;
+
+  return { hour: newHour, minute: newMinute };
+}
+
 export type ClockMode = 
   "HourAdjustable" | 
   "MinuteAdjustable" | 

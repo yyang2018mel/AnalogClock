@@ -1,81 +1,44 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ClockContext } from "./Context";
-import React from "react";
+import { Backward, Forward, isClockAdjustable } from "./ClockState";
 
-function UpTriangle(): React.JSX.Element {
+function Triangle({
+  direction,
+}: {
+  direction: "up" | "down";
+}): React.JSX.Element {
   const { setClockState } = React.useContext(ClockContext)!;
+  const baseStyle: React.CSSProperties = {
+    width: 0,
+    height: 0,
+    borderLeft: "5px solid transparent",
+    borderRight: "5px solid transparent",
+    position: "absolute",
+    transform: "translateX(-50%)",
+    top: direction === "up" ? "6%" : "61%",
+    left: "50%",
+    cursor: "grab",
+  };
+
+  const style: React.CSSProperties =
+    direction === "up"
+      ? { ...baseStyle, borderBottom: "10px solid #fff" }
+      : { ...baseStyle, borderTop: "10px solid #fff" };
 
   return (
     <div
-      style={{
-        width: 0,
-        height: 0,
-        borderLeft: "5px solid transparent",
-        borderRight: "5px solid transparent",
-        borderBottom: "10px solid #fff",
-        position: "absolute",
-        top: "6%",
-        left: "50%",
-        transform: "translateX(-50%)",
-        cursor: "grab",
-      }}
-      onClick={(e) => {
-        setClockState((prev) => {
-          if (prev.mode === "PausedNoAdjustable") return prev;
-          else if (prev.mode === "HourAdjustable") {
-            const newHour = prev.hour === 0 ? 11 : prev.hour - 1;
-            return { ...prev, hour: newHour };
-          } else {
-            const newMinute = prev.minute === 0 ? 59 : prev.minute - 1;
-            const newHour =
-              prev.minute === 0
-                ? prev.hour === 0
-                  ? 11
-                  : prev.hour - 1
-                : prev.hour;
-            return { ...prev, hour: newHour, minute: newMinute };
-          }
-        });
-      }}
+      style={style}
       onDoubleClick={(e) => {
         e.stopPropagation();
       }}
-    />
-  );
-}
-
-function DownTriangle(): React.JSX.Element {
-  const { setClockState } = React.useContext(ClockContext)!;
-  return (
-    <div
-      style={{
-        width: 0,
-        height: 0,
-        borderLeft: "5px solid transparent",
-        borderRight: "5px solid transparent",
-        borderTop: "10px solid #fff",
-        position: "absolute",
-        top: "61%",
-        left: "50%",
-        transform: "translateX(-50%)",
-        cursor: "grab",
-      }}
-      onClick={(e) => {
+      onClick={() => {
         setClockState((prev) => {
-          if (prev.mode === "PausedNoAdjustable") return prev;
-          else if (prev.mode === "HourAdjustable") {
-            const newHour = prev.hour + 1;
-            return { ...prev, hour: newHour % 12 };
-          } else {
-            const newMinute = prev.minute + 1;
-            const newHour =
-              prev.minute === 59 ? (prev.hour + 1) % 12 : prev.hour;
-            return { ...prev, hour: newHour, minute: newMinute % 60 };
-          }
+          if (!isClockAdjustable(prev)) return prev;
+          const unit = prev.mode === "HourAdjustable" ? "hour" : "minute";
+          const newTime =
+            direction === "up" ? Backward(prev, unit) : Forward(prev, unit);
+          return { ...prev, ...newTime };
         });
-      }}
-      onDoubleClick={(e) => {
-        e.stopPropagation();
       }}
     />
   );
@@ -111,8 +74,8 @@ function AnalogClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
     >
       {activated ? (
         <>
-          <UpTriangle />
-          <DownTriangle />
+          <Triangle direction="up" />
+          <Triangle direction="down" />
         </>
       ) : (
         <></>
