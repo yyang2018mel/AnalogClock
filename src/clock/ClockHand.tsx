@@ -1,5 +1,5 @@
 import React from "react";
-import { ClockContext } from "./AnalogClock";
+import { ClockContext } from "./Context";
 import { getClockHandDegreeFromTime } from "./ClockState";
 
 function ClockHand({

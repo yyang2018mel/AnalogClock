@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import { ClockState, getClockHandDegreeFromTime } from "./ClockState";
 import ClockHand from "./ClockHand";
-
-type ClockStateContext = {
-  clockState: ClockState;
-  setClockState: React.Dispatch<React.SetStateAction<ClockState>>;
-};
-
-export const ClockContext = React.createContext<ClockStateContext | undefined>(
-  undefined
-);
+import ClockFace from "./ClockFace";
+import { ClockContext } from "./Context";
 
 function UpTriangle(): React.JSX.Element {
   const { setClockState } = React.useContext(ClockContext)!;
@@ -132,8 +125,6 @@ function Crown({ style }: { style?: React.CSSProperties }): React.JSX.Element {
 
 function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
   const { clockSize } = prop;
-  const hours = Array.from({ length: 12 }, (_, i) => i + 1);
-
   const [clockState, setClockState] = useState<ClockState>({
     hour: 0,
     minute: 30,
@@ -150,19 +141,9 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
             zIndex: 1,
           }}
         >
-          {hours.map((hour) => (
-            <div key={hour} style={makeHourNumberStyle(hour, clockSize)}>
-              {hour}
-            </div>
-          ))}
-          <div
-            style={{
-              ...makeClockCentreStyle(12),
-              zIndex: 2,
-            }}
-          />
-          <ClockHand type="hour" zIndex={0} clockSize={clockSize} />
-          <ClockHand type="minute" zIndex={1} clockSize={clockSize} />
+          <ClockHand zIndex={0} clockSize={clockSize} type="hour" />
+          <ClockHand zIndex={1} clockSize={clockSize} type="minute" />
+          <ClockFace zIndex={2} clockSize={clockSize} />
         </div>
         <Crown style={{ zIndex: 0 }} />
       </div>
@@ -190,54 +171,6 @@ const makeClockFrameStyle = (clockSize: number): React.CSSProperties => {
     borderColor: "#000",
     borderWidth: 4,
     position: "relative",
-  };
-};
-
-const makeHourNumberStyle = (
-  hour: number,
-  clockSize: number
-): React.CSSProperties => {
-  const angle = ((hour - 3) * 30 * Math.PI) / 180;
-  const radius = clockSize / 2 - clockSize / 12;
-  const x = radius * Math.cos(angle);
-  const y = radius * Math.sin(angle);
-
-  return {
-    color: "#000",
-    position: "absolute",
-    left: `calc(50% + ${x}px)`,
-    top: `calc(50% + ${y}px)`,
-    transform: "translate(-50%, -50%)",
-  };
-};
-
-const makeClockCentreStyle = (
-  clockCenterSize: number = 5
-): React.CSSProperties => {
-  return {
-    width: clockCenterSize,
-    height: clockCenterSize,
-    borderRadius: "50%",
-    backgroundColor: "#000",
-    position: "absolute",
-  };
-};
-
-const makeHandStyle = (
-  handLength: number,
-  handWidth: number,
-  color: string = "#000"
-): React.CSSProperties => {
-  return {
-    width: handWidth,
-    height: handLength,
-    backgroundColor: color,
-    position: "absolute",
-    left: `calc(50% - ${handWidth / 2}px)`,
-    top: `calc(50% - ${handLength}px)`,
-    transformOrigin: "50% 100%",
-    borderTopLeftRadius: handWidth / 2,
-    borderTopRightRadius: handWidth / 2,
   };
 };
 
