@@ -1,12 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import AnalogClock from "./clock/AnalogClock";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <AnalogClock clockSize={300} />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
