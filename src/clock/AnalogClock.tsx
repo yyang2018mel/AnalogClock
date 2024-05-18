@@ -3,7 +3,7 @@ import { ClockState } from "./ClockState";
 import ClockHand, { HandType } from "./ClockHand";
 import ClockFace from "./ClockFace";
 import { ClockContext } from "./Context";
-import Crown from "./Crown";
+import ClockCrown from "./ClockCrown";
 import ClockFrame from "./ClockFrame";
 import ClockContainer from "./ClockContainer";
 
@@ -18,7 +18,7 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
   return (
     <ClockContext.Provider value={{ clockState, setClockState }}>
       <ClockContainer clockSize={clockSize}>
-        <Crown zIndex={0} />
+        <ClockCrown zIndex={0} />
         <ClockFrame zIndex={1} clockSize={clockSize}>
           <ClockHand zIndex={10} clockSize={clockSize} type={HandType.Hour} />
           <ClockHand zIndex={20} clockSize={clockSize} type={HandType.Minute} />
