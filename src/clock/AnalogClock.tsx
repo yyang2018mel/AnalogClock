@@ -9,6 +9,7 @@ import ClockContainer from "./ClockContainer";
 
 function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
   const { clockSize } = prop;
+
   const [clockState, setClockState] = useState<ClockState>({
     hour: 0,
     minute: 30,
@@ -22,7 +23,14 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
         <ClockFrame zIndex={1} clockSize={clockSize}>
           <ClockHand zIndex={10} clockSize={clockSize} type={HandType.Hour} />
           <ClockHand zIndex={20} clockSize={clockSize} type={HandType.Minute} />
-          <ClockFace zIndex={30} clockSize={clockSize} />
+          <ClockFace
+            zIndex={30}
+            clockSize={clockSize}
+            showMinute={
+              clockState.mode === "MinuteAdjustable" ||
+              clockState.mode === "HourAdjustable"
+            }
+          />
         </ClockFrame>
       </ClockContainer>
     </ClockContext.Provider>
