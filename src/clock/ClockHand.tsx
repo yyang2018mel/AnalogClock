@@ -2,6 +2,11 @@ import React from "react";
 import { ClockContext } from "./Context";
 import { getClockHandDegreeFromTime } from "./ClockState";
 
+enum HandType {
+  Hour,
+  Minute,
+}
+
 function ClockHand({
   type,
   zIndex,
@@ -9,35 +14,36 @@ function ClockHand({
 }: {
   zIndex: number;
   clockSize: number;
-  type: "hour" | "minute";
+  type: HandType;
 }): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
 
-  const handLength = (type === "hour" ? clockSize / 3 : clockSize / 2.5) * 0.85;
+  const handLength =
+    (type === HandType.Hour ? clockSize / 3 : clockSize / 2.5) * 0.85;
 
-  const handWidth = type === "hour" ? 8 : 6;
+  const handWidth = type === HandType.Hour ? 8 : 6;
 
   const handColor =
-    type === "hour" && clockState.mode === "HourAdjustable"
+    type === HandType.Hour && clockState.mode === "HourAdjustable"
       ? "green"
-      : type === "minute" && clockState.mode === "MinuteAdjustable"
+      : type === HandType.Minute && clockState.mode === "MinuteAdjustable"
       ? "green"
       : "#000";
 
   const handDegree =
-    type === "hour"
+    type === HandType.Hour
       ? getClockHandDegreeFromTime(clockState).hourHandDegree
-      : type === "minute"
+      : type === HandType.Minute
       ? getClockHandDegreeFromTime(clockState).minuteHandDegree
       : 0;
 
   const onDoubleClick = () => {
     setClockState((prev) => {
-      if (type === "hour" && prev.mode === "MinuteAdjustable") {
+      if (type === HandType.Hour && prev.mode === "MinuteAdjustable") {
         return { ...prev, mode: "HourAdjustable" };
       }
 
-      if (type === "minute" && prev.mode === "HourAdjustable") {
+      if (type === HandType.Minute && prev.mode === "HourAdjustable") {
         return { ...prev, mode: "MinuteAdjustable" };
       }
 
@@ -74,5 +80,7 @@ const makeHandStyle = (
     borderTopRightRadius: handWidth / 2,
   };
 };
+
+export { HandType };
 
 export default ClockHand;

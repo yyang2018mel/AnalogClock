@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { ClockState } from "./ClockState";
-import ClockHand from "./ClockHand";
+import ClockHand, { HandType } from "./ClockHand";
 import ClockFace from "./ClockFace";
 import { ClockContext } from "./Context";
 import Crown from "./Crown";
 import ClockFrame from "./ClockFrame";
+import ClockContainer from "./ClockContainer";
 
 function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
   const { clockSize } = prop;
@@ -16,24 +17,16 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
 
   return (
     <ClockContext.Provider value={{ clockState, setClockState }}>
-      <div style={makeClockContainerStyle(clockSize)}>
+      <ClockContainer clockSize={clockSize}>
         <Crown zIndex={0} />
         <ClockFrame zIndex={1} clockSize={clockSize}>
-          <ClockHand zIndex={0} clockSize={clockSize} type="hour" />
-          <ClockHand zIndex={1} clockSize={clockSize} type="minute" />
-          <ClockFace zIndex={2} clockSize={clockSize} />
+          <ClockHand zIndex={10} clockSize={clockSize} type={HandType.Hour} />
+          <ClockHand zIndex={20} clockSize={clockSize} type={HandType.Minute} />
+          <ClockFace zIndex={30} clockSize={clockSize} />
         </ClockFrame>
-      </div>
+      </ClockContainer>
     </ClockContext.Provider>
   );
 }
-
-const makeClockContainerStyle = (clockSize: number): React.CSSProperties => {
-  return {
-    width: clockSize,
-    height: clockSize,
-    position: "relative",
-  };
-};
 
 export default AnalogClock;
