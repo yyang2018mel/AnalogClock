@@ -6,8 +6,12 @@ import { ClockContext } from "./Context";
 import ClockCrown from "./ClockCrown";
 import ClockFrame from "./ClockFrame";
 import ClockContainer from "./ClockContainer";
+import { TimeField } from "@mui/x-date-pickers/TimeField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 
-function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
+function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
   const { clockSize } = prop;
 
   const [clockState, setClockState] = useState<ClockState>({
@@ -43,8 +47,30 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
           />
         </ClockFrame>
       </ClockContainer>
+      <div style={{ height: "10vh" }}></div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <TimeField
+          ampm={false}
+          inputProps={{
+            style: {
+              textAlign: "center",
+              color: "white",
+            },
+          }}
+          value={dayjs().hour(clockState.hour).minute(clockState.minute)}
+          onChange={(newTimeMaybe: Dayjs | null) => {
+            if (newTimeMaybe) {
+              setClockState({
+                hour: newTimeMaybe.hour(),
+                minute: newTimeMaybe.minute(),
+                mode: clockState.mode,
+              });
+            }
+          }}
+        />
+      </LocalizationProvider>
     </ClockContext.Provider>
   );
 }
 
-export default AnalogClock;
+export default ClockCombo;
