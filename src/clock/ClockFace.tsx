@@ -10,13 +10,13 @@ function ClockFace({
   showMinute: boolean;
 }): React.JSX.Element {
   const hours = Array.from({ length: 12 }, (_, i) => i + 1);
-  const minutes = Array.from({ length: 12 }, (_, i) => (i + 1) * 5);
+  const minutes = hours.map((hour) => hour * 5);
   return (
     <div style={{ zIndex: zIndex }}>
       {hours.map((hour) => (
         <div
           key={hour}
-          style={makeClockNumberStyle(hour, clockSize, 10, 12, "hour")}
+          style={makeClockNumberStyle(hour, clockSize, 12, 12, "hour")}
         >
           {hour}
         </div>
@@ -51,6 +51,7 @@ const makeClockNumberStyle = (
   return {
     color: "#000",
     fontSize: fontSize,
+    fontWeight: unit === "hour" ? "bold" : "normal",
     position: "absolute",
     left: `calc(50% + ${x}px)`,
     top: `calc(50% + ${y}px)`,

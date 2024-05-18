@@ -21,8 +21,18 @@ function AnalogClock(prop: { clockSize: number }): React.JSX.Element {
       <ClockContainer clockSize={clockSize}>
         <ClockCrown zIndex={0} />
         <ClockFrame zIndex={1} clockSize={clockSize}>
-          <ClockHand zIndex={10} clockSize={clockSize} type={HandType.Hour} />
-          <ClockHand zIndex={20} clockSize={clockSize} type={HandType.Minute} />
+          <ClockHand
+            zIndex={10}
+            clockSize={clockSize}
+            type={HandType.Hour}
+            baseColor="orange"
+          />
+          <ClockHand
+            zIndex={20}
+            clockSize={clockSize}
+            type={HandType.Minute}
+            baseColor="red"
+          />
           <ClockFace
             zIndex={30}
             clockSize={clockSize}

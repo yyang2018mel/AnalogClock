@@ -11,10 +11,12 @@ function ClockHand({
   type,
   zIndex,
   clockSize,
+  baseColor,
 }: {
   zIndex: number;
   clockSize: number;
   type: HandType;
+  baseColor: string;
 }): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
 
@@ -28,7 +30,7 @@ function ClockHand({
       ? "green"
       : type === HandType.Minute && clockState.mode === "MinuteAdjustable"
       ? "green"
-      : "#000";
+      : baseColor;
 
   const handDegree =
     type === HandType.Hour
@@ -55,7 +57,7 @@ function ClockHand({
     <div
       onDoubleClick={onDoubleClick}
       style={{
-        ...makeHandStyle(handLength, handWidth, handColor),
+        ...makeHandStyle(handColor, handLength, handWidth),
         transform: `rotate(${handDegree}deg)`,
         zIndex: zIndex,
       }}
@@ -64,9 +66,9 @@ function ClockHand({
 }
 
 const makeHandStyle = (
+  color: string,
   handLength: number,
-  handWidth: number,
-  color: string = "#000"
+  handWidth: number
 ): React.CSSProperties => {
   return {
     width: handWidth,
