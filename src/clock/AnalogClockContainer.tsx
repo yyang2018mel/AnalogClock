@@ -1,6 +1,6 @@
 import React from "react";
 
-function ClockContainer({
+function AnalogClockContainer({
   clockSize,
   children,
 }: {
@@ -18,4 +18,4 @@ const makeClockContainerStyle = (clockSize: number): React.CSSProperties => {
   };
 };
 
-export default ClockContainer;
+export default AnalogClockContainer;

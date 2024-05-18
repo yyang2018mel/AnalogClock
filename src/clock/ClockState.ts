@@ -13,6 +13,12 @@ export interface ClockState extends TimeState {
   mode: ClockMode;
 };
 
+export function isClockAdjustable(clockState: ClockState): boolean {
+  return (
+    clockState.mode === "HourAdjustable" || clockState.mode === "MinuteAdjustable"
+  );
+}
+
 export function getClockHandDegreeFromTime(time: TimeState): {
   hourHandDegree: number;
   minuteHandDegree: number;

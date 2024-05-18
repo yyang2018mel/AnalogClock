@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ClockState } from "./ClockState";
-import ClockHand, { HandType } from "./ClockHand";
-import ClockFace from "./ClockFace";
+import AnalogClockHand, { HandType } from "./AnalogClockHand";
+import ClockFace from "./AnalogClockFace";
 import { ClockContext } from "./Context";
-import ClockCrown from "./ClockCrown";
-import ClockFrame from "./ClockFrame";
-import ClockContainer from "./ClockContainer";
+import AnalogClockCrown from "./AnalogClockCrown";
+import AnalogClockFrame from "./AnalogClockFrame";
+import AnalogClockContainer from "./AnalogClockContainer";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -22,16 +22,16 @@ function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
 
   return (
     <ClockContext.Provider value={{ clockState, setClockState }}>
-      <ClockContainer clockSize={clockSize}>
-        <ClockCrown zIndex={0} />
-        <ClockFrame zIndex={1} clockSize={clockSize}>
-          <ClockHand
+      <AnalogClockContainer clockSize={clockSize}>
+        <AnalogClockCrown zIndex={0} />
+        <AnalogClockFrame zIndex={1} clockSize={clockSize}>
+          <AnalogClockHand
             zIndex={10}
             clockSize={clockSize}
             type={HandType.Hour}
             baseColor="orange"
           />
-          <ClockHand
+          <AnalogClockHand
             zIndex={20}
             clockSize={clockSize}
             type={HandType.Minute}
@@ -45,8 +45,8 @@ function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
               clockState.mode === "HourAdjustable"
             }
           />
-        </ClockFrame>
-      </ClockContainer>
+        </AnalogClockFrame>
+      </AnalogClockContainer>
       <div style={{ height: "10vh" }}></div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimeField

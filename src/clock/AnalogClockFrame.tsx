@@ -1,6 +1,6 @@
 import React from "react";
 
-function ClockFrame({
+function AnalogClockFrame({
   zIndex,
   clockSize,
   children,
@@ -36,4 +36,4 @@ const makeClockFrameStyle = (clockSize: number): React.CSSProperties => {
   };
 };
 
-export default ClockFrame;
+export default AnalogClockFrame;

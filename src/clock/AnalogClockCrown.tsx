@@ -81,7 +81,7 @@ function DownTriangle(): React.JSX.Element {
   );
 }
 
-function ClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
+function AnalogClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
   const styleSheet: React.CSSProperties = {
     width: "6%",
     height: "10%",
@@ -121,4 +121,4 @@ function ClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
   );
 }
 
-export default ClockCrown;
+export default AnalogClockCrown;

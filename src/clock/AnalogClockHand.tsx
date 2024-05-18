@@ -7,7 +7,7 @@ enum HandType {
   Minute,
 }
 
-function ClockHand({
+function AnalogClockHand({
   type,
   zIndex,
   clockSize,
@@ -85,4 +85,4 @@ const makeHandStyle = (
 
 export { HandType };
 
-export default ClockHand;
+export default AnalogClockHand;
