@@ -3,6 +3,7 @@ import { ClockState } from "./ClockState";
 import { ClockContext } from "./Context";
 import AnalogClock from "./AnalogClock";
 import DigitalClock from "./DigtalClock";
+import { ClockImageUrls } from "./BackgroundImages";
 
 function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
   const { clockSize } = prop;
@@ -14,7 +15,10 @@ function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
 
   return (
     <ClockContext.Provider value={{ clockState, setClockState }}>
-      <AnalogClock clockSize={clockSize} />
+      <AnalogClock
+        clockSize={clockSize}
+        backgroundImageUrl={ClockImageUrls[0]}
+      />
       <div style={{ height: 20 }} />
       <DigitalClock />
     </ClockContext.Provider>

@@ -3,16 +3,24 @@ import React from "react";
 function AnalogClockFrame({
   zIndex,
   clockSize,
+  backgroundImageUrl,
   children,
 }: {
   clockSize: number;
   zIndex: number;
+  backgroundImageUrl: string;
   children: React.ReactNode;
 }): React.JSX.Element {
   return (
     <div
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
       style={{
         ...makeClockFrameStyle(clockSize),
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         zIndex: zIndex,
       }}
     >

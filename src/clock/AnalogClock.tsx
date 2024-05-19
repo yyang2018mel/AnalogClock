@@ -7,12 +7,22 @@ import AnalogClockFrame from "./AnalogClockFrame";
 import AnalogClockContainer from "./AnalogClockContainer";
 import { isClockAdjustable } from "./ClockState";
 
-function AnalogClock({ clockSize }: { clockSize: number }): React.JSX.Element {
+function AnalogClock({
+  clockSize,
+  backgroundImageUrl,
+}: {
+  clockSize: number;
+  backgroundImageUrl: string;
+}): React.JSX.Element {
   const { clockState } = React.useContext(ClockContext)!;
   return (
     <AnalogClockContainer clockSize={clockSize}>
       <AnalogClockCrown zIndex={0} />
-      <AnalogClockFrame zIndex={1} clockSize={clockSize}>
+      <AnalogClockFrame
+        zIndex={1}
+        clockSize={clockSize}
+        backgroundImageUrl={backgroundImageUrl}
+      >
         <AnalogClockHand
           zIndex={10}
           clockSize={clockSize}
