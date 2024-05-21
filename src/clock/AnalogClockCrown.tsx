@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
 import { Backward, Forward, isClockAdjustable } from "./ClockState";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 function Triangle({
   direction,
@@ -8,17 +10,6 @@ function Triangle({
   direction: "up" | "down";
 }): React.JSX.Element {
   const { setClockState } = React.useContext(ClockContext)!;
-  const baseStyle: React.CSSProperties = {
-    width: 0,
-    height: 0,
-    borderLeft: "5px solid transparent",
-    borderRight: "5px solid transparent",
-    position: "absolute",
-    transform: "translateX(-50%)",
-    top: direction === "up" ? "6%" : "61%",
-    left: "50%",
-    cursor: "grab",
-  };
 
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const handleMouseDown = () => {
@@ -31,10 +22,7 @@ function Triangle({
     });
   };
 
-  const style: React.CSSProperties =
-    direction === "up"
-      ? { ...baseStyle, borderBottom: "10px solid #fff" }
-      : { ...baseStyle, borderTop: "10px solid #fff" };
+  const Icon = direction === "up" ? KeyboardArrowUpIcon : KeyboardArrowDownIcon;
 
   useEffect(() => {
     return () => {
@@ -45,8 +33,9 @@ function Triangle({
   }, [intervalId]);
 
   return (
-    <div
-      style={style}
+    <Icon
+      style={{ cursor: "grab", height: "50%" }}
+      fontSize="small"
       onDoubleClick={(e) => {
         e.stopPropagation();
       }}
@@ -80,6 +69,10 @@ function AnalogClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
     top: "45%",
     borderTopRightRadius: "50%",
     borderBottomRightRadius: "50%",
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "column",
+    alignItems: "center",
     zIndex: zIndex,
   };
 
@@ -89,7 +82,9 @@ function AnalogClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
   return (
     <div
       style={styleSheet}
-      onDoubleClick={() => {
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (!activated) {
           setClockState((prev) => ({ ...prev, mode: "MinuteAdjustable" }));
         } else {
