@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <ClockCombo clockSize={300} />
+        <ClockCombo />
       </header>
     </div>
   );

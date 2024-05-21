@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Slider,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ScienceIcon from "@mui/icons-material/Science";
@@ -22,8 +23,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
-  const { clockSize } = prop;
+function ClockCombo(): React.JSX.Element {
   const [clockState, setClockState] = useState<ClockState>({
     hour: 0,
     minute: 30,
@@ -35,6 +35,9 @@ function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
 
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string>("");
   const backgroundImageUrlRef = useRef<string>(backgroundImageUrl);
+
+  const [clockSize, setClockSize] = useState<number>(200);
+  const clockSizeRef = useRef<number>(clockSize);
 
   return (
     <ClockContext.Provider value={{ clockState, setClockState }}>
@@ -68,13 +71,20 @@ function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
           </Accordion>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              Clock Hand
+              Sizing
             </AccordionSummary>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              Text
-            </AccordionSummary>
+            <AccordionDetails>
+              <div>Clock Size</div>
+              <Slider
+                valueLabelDisplay="auto"
+                defaultValue={clockSize}
+                min={100}
+                max={350}
+                onChange={(e, newVal) =>
+                  (clockSizeRef.current = newVal as number)
+                }
+              />
+            </AccordionDetails>
           </Accordion>
         </DialogContent>
 
@@ -84,6 +94,7 @@ function ClockCombo(prop: { clockSize: number }): React.JSX.Element {
             onClick={() => {
               setBackgroundImageUrl(backgroundImageUrlRef.current);
               setClockUserMode(prevClockUserMode.current);
+              setClockSize(clockSizeRef.current);
             }}
           >
             Apply
