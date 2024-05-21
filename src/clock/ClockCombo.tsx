@@ -33,8 +33,10 @@ function ClockCombo(): React.JSX.Element {
   const [clockUserMode, setClockUserMode] = useState<ClockUserMode>("Static");
   const prevClockUserMode = useRef<ClockUserMode>(clockUserMode);
 
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState<string>("");
-  const backgroundImageUrlRef = useRef<string>(backgroundImageUrl);
+  const [backgroundImgIndex, setBackgroundImgIndex] = useState<number | null>(
+    null
+  );
+  const backgroundImageIndexRef = useRef<number | null>(backgroundImgIndex);
 
   const [clockSize, setClockSize] = useState<number>(200);
   const clockSizeRef = useRef<number>(clockSize);
@@ -43,7 +45,9 @@ function ClockCombo(): React.JSX.Element {
     <ClockContext.Provider value={{ clockState, setClockState }}>
       <AnalogClock
         clockSize={clockSize}
-        backgroundImageUrl={backgroundImageUrl}
+        backgroundImageUrl={
+          backgroundImgIndex !== null ? ClockImageUrls[backgroundImgIndex] : ""
+        }
       />
       <div style={{ height: 10 }} />
       <DigitalClock />
@@ -62,9 +66,10 @@ function ClockCombo(): React.JSX.Element {
             </AccordionSummary>
             <AccordionDetails>
               <PictureSelectionGrid
+                initSelectedIndex={backgroundImageIndexRef.current}
                 candidateImages={ClockImageUrls}
-                onPictureSelection={(url) =>
-                  (backgroundImageUrlRef.current = url)
+                onPictureSelection={(idx) =>
+                  (backgroundImageIndexRef.current = idx)
                 }
               />
             </AccordionDetails>
@@ -92,7 +97,7 @@ function ClockCombo(): React.JSX.Element {
           <Button
             size="small"
             onClick={() => {
-              setBackgroundImageUrl(backgroundImageUrlRef.current);
+              setBackgroundImgIndex(backgroundImageIndexRef.current);
               setClockUserMode(prevClockUserMode.current);
               setClockSize(clockSizeRef.current);
             }}

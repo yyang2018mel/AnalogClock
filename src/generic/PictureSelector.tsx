@@ -2,17 +2,21 @@ import { Card, CardMedia, Checkbox, Grid } from "@mui/material";
 import React from "react";
 
 function PictureSelectionGrid({
+  initSelectedIndex,
   candidateImages,
   onPictureSelection,
 }: {
+  initSelectedIndex: number | null;
   candidateImages: string[];
-  onPictureSelection: (url: string) => void;
+  onPictureSelection: (idx: number | null) => void;
 }) {
-  const [selected, setSelected] = React.useState<number | null>(null);
+  const [selected, setSelected] = React.useState<number | null>(
+    initSelectedIndex
+  );
 
   const handleSelect = (index: number) => {
     setSelected(index === selected ? null : index);
-    onPictureSelection(candidateImages[index]);
+    onPictureSelection(index === selected ? null : index);
   };
 
   return (
