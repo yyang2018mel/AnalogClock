@@ -16,7 +16,7 @@ function ClockFace({
       {hours.map((hour) => (
         <div
           key={hour}
-          style={makeClockNumberStyle(hour, clockSize, 12, 12, "hour")}
+          style={makeClockNumberStyle(hour, clockSize, clockSize / 20, "hour")}
         >
           {hour}
         </div>
@@ -25,7 +25,12 @@ function ClockFace({
         minutes.map((minute, i) => (
           <div
             key={i}
-            style={makeClockNumberStyle(minute, clockSize, 6, 20, "minute")}
+            style={makeClockNumberStyle(
+              minute,
+              clockSize,
+              clockSize / 50,
+              "minute"
+            )}
           >
             {minute}
           </div>
@@ -39,12 +44,11 @@ const makeClockNumberStyle = (
   number: number,
   clockSize: number,
   fontSize: number,
-  offsetRate: number,
   unit: "hour" | "minute"
 ): React.CSSProperties => {
   const adjustedNumber = unit === "hour" ? number : number / 5;
   const angle = ((adjustedNumber - 3) * 30 * Math.PI) / 180;
-  const radius = clockSize / 2 - clockSize / offsetRate;
+  const radius = clockSize / (unit === "hour" ? 2.5 : 2.2);
   const x = radius * Math.cos(angle);
   const y = radius * Math.sin(angle);
 
