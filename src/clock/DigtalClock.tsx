@@ -12,6 +12,7 @@ function DigitalClock(): React.JSX.Element {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <TimeField
+        size="small"
         ampm={false}
         readOnly={!isAdjustable}
         inputProps={{

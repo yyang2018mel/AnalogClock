@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { ClockState } from "./ClockState";
 import { ClockContext } from "./Context";
 import AnalogClock from "./AnalogClock";
@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Paper,
   Slider,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -22,6 +23,126 @@ import ScienceIcon from "@mui/icons-material/Science";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+type ClockConfig = {
+  clockSize: number;
+  hourHandColor: [string, string];
+  minuteHandColor: [string, string];
+  backgroundImgIndex: number | null;
+};
+
+const DefaultClockConfig: ClockConfig = {
+  clockSize: 250,
+  hourHandColor: ["orange", "yellow"],
+  minuteHandColor: ["red", "pink"],
+  backgroundImgIndex: null,
+};
+
+function ClockConfigurationDialog({
+  initConfig,
+  shouldOpen,
+  stageClockConfig,
+  commitClockConfig,
+  onClose,
+}: {
+  initConfig: ClockConfig;
+  shouldOpen: boolean;
+  stageClockConfig: React.Dispatch<React.SetStateAction<ClockConfig>>;
+  commitClockConfig: (c: ClockConfig) => void;
+  onClose: () => void;
+}): React.JSX.Element {
+  // const [isApplied, setIsApplied] = useState<boolean>(false);
+  const workingConfigRef = useRef<ClockConfig>(initConfig);
+
+  const onDialogApply = () => {
+    commitClockConfig(workingConfigRef.current);
+    onClose();
+  };
+
+  const onDialogCloseWithoutApply = () => {
+    // rollback
+    stageClockConfig(initConfig);
+    onClose();
+  };
+
+  return (
+    <Dialog
+      keepMounted
+      open={shouldOpen}
+      scroll="paper"
+      onClose={onDialogCloseWithoutApply}
+      PaperComponent={({ children }) => (
+        <Paper
+          style={{
+            width: "30%",
+            minHeight: "50%",
+            maxHeight: "100%",
+            marginLeft: "auto",
+          }}
+        >
+          {children}
+        </Paper>
+      )}
+    >
+      <DialogTitle>Configuration</DialogTitle>
+      <DialogContent>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            Background Image
+          </AccordionSummary>
+          <AccordionDetails>
+            <PictureSelectionGrid
+              initSelectedIndex={initConfig.backgroundImgIndex}
+              candidateImages={ClockImageUrls}
+              onPictureSelection={(idx) => {
+                workingConfigRef.current = {
+                  ...workingConfigRef.current,
+                  backgroundImgIndex: idx,
+                };
+                stageClockConfig((prev) => ({
+                  ...prev,
+                  backgroundImgIndex: idx,
+                }));
+              }}
+            />
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            Sizing
+          </AccordionSummary>
+          <AccordionDetails>
+            <div>Clock Size</div>
+            <Slider
+              valueLabelDisplay="auto"
+              defaultValue={initConfig.clockSize}
+              min={200}
+              max={500}
+              onChange={(e, newVal) => {
+                workingConfigRef.current = {
+                  ...workingConfigRef.current,
+                  clockSize: newVal as number,
+                };
+                stageClockConfig((prev) => ({
+                  ...prev,
+                  clockSize: newVal as number,
+                }));
+              }}
+            />
+          </AccordionDetails>
+        </Accordion>
+      </DialogContent>
+
+      <DialogActions>
+        <Button size="small" onClick={onDialogApply}>
+          Apply
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+const MClockConfigurationDialog = React.memo(ClockConfigurationDialog);
 
 function ClockCombo(): React.JSX.Element {
   const [clockState, setClockState] = useState<ClockState>({
@@ -31,81 +152,44 @@ function ClockCombo(): React.JSX.Element {
   });
 
   const [clockUserMode, setClockUserMode] = useState<ClockUserMode>("Static");
-  const prevClockUserMode = useRef<ClockUserMode>(clockUserMode);
+  const clockUserModeBeforeConfig = useRef<ClockUserMode>(clockUserMode);
 
-  const [backgroundImgIndex, setBackgroundImgIndex] = useState<number | null>(
-    null
-  );
-  const backgroundImageIndexRef = useRef<number | null>(backgroundImgIndex);
+  const [clockConfig, setClockConfig] =
+    useState<ClockConfig>(DefaultClockConfig);
 
-  const [clockSize, setClockSize] = useState<number>(200);
-  const clockSizeRef = useRef<number>(clockSize);
+  const commitedClockConfig = useRef<ClockConfig>(clockConfig);
+
+  const commitClockConfig = useCallback((c: ClockConfig) => {
+    commitedClockConfig.current = c;
+  }, []);
+
+  const closeDialog = useCallback(() => {
+    setClockUserMode(clockUserModeBeforeConfig.current);
+  }, []);
 
   return (
-    <ClockContext.Provider value={{ clockState, setClockState }}>
-      <AnalogClock
-        clockSize={clockSize}
-        backgroundImageUrl={
-          backgroundImgIndex !== null ? ClockImageUrls[backgroundImgIndex] : ""
-        }
+    <>
+      <ClockContext.Provider value={{ clockState, setClockState }}>
+        <AnalogClock
+          clockSize={clockConfig.clockSize}
+          backgroundImageUrl={
+            clockConfig.backgroundImgIndex !== null
+              ? ClockImageUrls[clockConfig.backgroundImgIndex]
+              : ""
+          }
+        />
+        <div style={{ height: 10 }} />
+        <DigitalClock />
+        <div style={{ height: 10 }} />
+      </ClockContext.Provider>
+
+      <MClockConfigurationDialog
+        initConfig={commitedClockConfig.current}
+        shouldOpen={clockUserMode === "Setup"}
+        stageClockConfig={setClockConfig}
+        commitClockConfig={commitClockConfig}
+        onClose={closeDialog}
       />
-      <div style={{ height: 10 }} />
-      <DigitalClock />
-      <div style={{ height: 10 }} />
-
-      <Dialog
-        open={clockUserMode === "Setup"}
-        scroll="paper"
-        onClose={() => setClockUserMode(prevClockUserMode.current)}
-      >
-        <DialogTitle>Configuration</DialogTitle>
-        <DialogContent>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              Background Image
-            </AccordionSummary>
-            <AccordionDetails>
-              <PictureSelectionGrid
-                initSelectedIndex={backgroundImageIndexRef.current}
-                candidateImages={ClockImageUrls}
-                onPictureSelection={(idx) =>
-                  (backgroundImageIndexRef.current = idx)
-                }
-              />
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              Sizing
-            </AccordionSummary>
-            <AccordionDetails>
-              <div>Clock Size</div>
-              <Slider
-                valueLabelDisplay="auto"
-                defaultValue={clockSize}
-                min={100}
-                max={350}
-                onChange={(e, newVal) =>
-                  (clockSizeRef.current = newVal as number)
-                }
-              />
-            </AccordionDetails>
-          </Accordion>
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            size="small"
-            onClick={() => {
-              setBackgroundImgIndex(backgroundImageIndexRef.current);
-              setClockUserMode(prevClockUserMode.current);
-              setClockSize(clockSizeRef.current);
-            }}
-          >
-            Apply
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       <BottomNavigation
         showLabels
@@ -113,7 +197,7 @@ function ClockCombo(): React.JSX.Element {
         value={clockUserMode}
         onChange={(_, newValue) =>
           setClockUserMode((prev) => {
-            prevClockUserMode.current = prev;
+            clockUserModeBeforeConfig.current = prev;
             return newValue;
           })
         }
@@ -134,7 +218,7 @@ function ClockCombo(): React.JSX.Element {
           icon={<ScienceIcon />}
         />
       </BottomNavigation>
-    </ClockContext.Provider>
+    </>
   );
 }
 

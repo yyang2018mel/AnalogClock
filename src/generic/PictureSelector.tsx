@@ -1,4 +1,4 @@
-import { Card, CardMedia, Checkbox, Grid } from "@mui/material";
+import { Card, CardMedia, Grid } from "@mui/material";
 import React from "react";
 
 function PictureSelectionGrid({
@@ -20,7 +20,7 @@ function PictureSelectionGrid({
   };
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} style={{ maxHeight: "90%" }}>
       {candidateImages.map((url, index) => (
         <Grid item xs={4} key={index}>
           <Card
