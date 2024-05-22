@@ -41,7 +41,7 @@ function ClockFace({
               textColor
             )}
           >
-            {minute}
+            {minute%60}
           </div>
         ))}
       <div style={makeClockCentreStyle(12)} />
