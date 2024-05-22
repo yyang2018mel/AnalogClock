@@ -10,6 +10,7 @@ import {
   AccordionSummary,
   BottomNavigation,
   BottomNavigationAction,
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -24,20 +25,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircleColorPicker from "../generic/CircleColorPicker";
-
-export type ClockConfig = {
-  clockSize: number;
-  hourHandColor: string;
-  minuteHandColor: string;
-  backgroundImgIndex: number | null;
-};
-
-const DefaultClockConfig: ClockConfig = {
-  clockSize: 250,
-  hourHandColor: "orange",
-  minuteHandColor: "red",
-  backgroundImgIndex: null,
-};
+import { ClockConfig, DefaultClockConfig } from "./ClockConfig";
 
 function ClockConfigurationDialog({
   initConfig,
@@ -76,7 +64,6 @@ function ClockConfigurationDialog({
           style={{
             width: "30%",
             minHeight: "50%",
-            maxHeight: "100%",
             marginLeft: "auto",
           }}
         >
@@ -84,7 +71,14 @@ function ClockConfigurationDialog({
         </Paper>
       )}
     >
-      <DialogTitle>Configuration</DialogTitle>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <DialogTitle>Configuration</DialogTitle>
+        <DialogActions>
+          <Button size="small" onClick={onDialogApply}>
+            Apply
+          </Button>
+        </DialogActions>
+      </Box>
       <DialogContent>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -167,12 +161,6 @@ function ClockConfigurationDialog({
           </AccordionDetails>
         </Accordion>
       </DialogContent>
-
-      <DialogActions>
-        <Button size="small" onClick={onDialogApply}>
-          Apply
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }

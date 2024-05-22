@@ -6,7 +6,7 @@ import AnalogClockCrown from "./AnalogClockCrown";
 import AnalogClockFrame from "./AnalogClockFrame";
 import AnalogClockContainer from "./AnalogClockContainer";
 import { isClockAdjustable } from "./ClockState";
-import { ClockConfig } from "./ClockCombo";
+import { ClockConfig } from "./ClockConfig";
 import { ClockImageUrls } from "./BackgroundImages";
 
 function AnalogClock({
