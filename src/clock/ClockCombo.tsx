@@ -7,6 +7,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  Grid,
   Switch,
   Typography,
 } from "@mui/material";
@@ -45,7 +46,15 @@ function ClockCombo(): React.JSX.Element {
   const [showDigital, setShowDigital] = useState<boolean>(false);
 
   return (
-    <>
+    <Box
+      display="flex"
+      flexDirection={"column"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      height={"100vh"}
+      width={"100vw"}
+      style={{ backgroundColor: "#282c34" }}
+    >
       <ClockContext.Provider value={{ clockState, setClockState }}>
         <AnalogClock clockConfig={clockConfig} />
         <div style={{ height: 10 }} />
@@ -98,7 +107,7 @@ function ClockCombo(): React.JSX.Element {
           icon={<ScienceIcon />}
         />
       </BottomNavigation>
-    </>
+    </Box>
   );
 }
 
