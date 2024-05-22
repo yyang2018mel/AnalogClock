@@ -15,7 +15,7 @@ const MClockConfigurationDialog = React.memo(ClockConfigurationDialog);
 
 function ClockCombo(): React.JSX.Element {
   const [clockState, setClockState] = useState<ClockState>({
-    hour: 0,
+    hour: 1,
     minute: 30,
     mode: "PausedNoAdjustable",
   });

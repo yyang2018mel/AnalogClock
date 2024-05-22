@@ -7,7 +7,7 @@ export type ClockConfig = {
 };
 
 export const DefaultClockConfig: ClockConfig = {
-  clockSize: 250,
+  clockSize: 450,
   hourHandColor: "orange",
   minuteHandColor: "red",
   textColor: "black",

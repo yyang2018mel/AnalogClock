@@ -13,6 +13,7 @@ import {
   Grid,
   Paper,
   Slider,
+  Typography,
 } from "@mui/material";
 import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -68,14 +69,14 @@ function ClockConfigurationDialog({
         <DialogTitle>Configuration</DialogTitle>
         <DialogActions>
           <Button size="small" onClick={onDialogApply}>
-            Apply
+            <Typography>Apply</Typography>
           </Button>
         </DialogActions>
       </Box>
       <DialogContent>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Background Image
+            <Typography variant="caption">Background Image</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <PictureSelectionGrid
@@ -96,15 +97,15 @@ function ClockConfigurationDialog({
         </Accordion>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Sizing
+            <Typography variant="caption">Sizing</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <div>Clock Size</div>
+            <Typography variant="caption">Clock Size</Typography>
             <Slider
               valueLabelDisplay="auto"
               defaultValue={initConfig.clockSize}
-              min={200}
-              max={500}
+              min={300}
+              max={700}
               onChange={(e, newVal) => {
                 workingConfigRef.current = {
                   ...workingConfigRef.current,
@@ -120,7 +121,7 @@ function ClockConfigurationDialog({
         </Accordion>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Coloring
+            <Typography variant="caption">Coloring</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Grid container spacing={2}>
