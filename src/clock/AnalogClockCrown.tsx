@@ -60,7 +60,7 @@ function Triangle({
   );
 }
 
-function AnalogClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
+function AnalogClockCrown({ zIndex, enabled }: { zIndex: number, enabled: boolean }): React.JSX.Element {
   const styleSheet: React.CSSProperties = {
     width: "6%",
     height: "10%",
@@ -83,9 +83,11 @@ function AnalogClockCrown({ zIndex }: { zIndex: number }): React.JSX.Element {
   return (
     <div
       style={styleSheet}
+      
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
+        if (!enabled) return;
         if (!activated) {
           setClockState((prev) => ({ ...prev, mode: "MinuteAdjustable" }));
         } else {

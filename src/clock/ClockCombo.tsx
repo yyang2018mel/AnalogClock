@@ -55,7 +55,7 @@ function ClockCombo(): React.JSX.Element {
       style={{ backgroundColor: "#282c34" }}
     >
       <ClockContext.Provider value={{ clockState, setClockState }}>
-        <AnalogClock clockConfig={clockConfig} />
+        <AnalogClock clockConfig={clockConfig} clockUserMode={clockUserMode} />
         <div style={{ height: 10 }} />
         {showDigital && <DigitalClock />}
         <Box display="flex" justifyContent="space-between" alignItems="center">

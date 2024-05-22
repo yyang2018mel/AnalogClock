@@ -11,22 +11,24 @@ import { ClockImageUrls } from "./BackgroundImages";
 
 function AnalogClock({
   clockConfig,
+  clockUserMode
 }: {
   clockConfig: ClockConfig;
+  clockUserMode: "Setup" | "Live" | "Static";
 }): React.JSX.Element {
   const {
     clockSize,
     backgroundImgIndex,
     hourHandColor,
     minuteHandColor,
-    textColor,
+    textColor
   } = clockConfig;
   const { clockState } = React.useContext(ClockContext)!;
   const backgroundImageUrl =
     backgroundImgIndex !== null ? ClockImageUrls[backgroundImgIndex] : "";
   return (
     <AnalogClockContainer clockSize={clockSize}>
-      <AnalogClockCrown zIndex={0} />
+      <AnalogClockCrown zIndex={0} enabled={clockUserMode === "Static"} />
       <AnalogClockFrame
         zIndex={1}
         clockSize={clockSize}
