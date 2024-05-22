@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import { getClockHandDegreeFromTime } from "./ClockState";
+import { getClockHandDegreeFromTime, isClockAdjustable } from "./ClockState";
+import styled, { css, keyframes } from "styled-components";
 
 enum HandType {
   Hour,
   Minute,
 }
+
+// Define a function that generates a keyframes animation
+const createFlashAnimation = (color: string) => keyframes`
+  0% { background-color: transparent; }
+  50% { background-color: ${color}; }
+  100% { background-color: transparent; }
+`;
+
+// Create a styled div that uses the animation
+const FlashableDiv = styled.div<{ isFlashing: boolean; color: string }>`
+  ${(props) =>
+    props.isFlashing
+      ? css`
+          animation: ${createFlashAnimation(props.color)} 0.5s infinite;
+        `
+      : css`
+          animation: none;
+        `};
+`;
 
 function AnalogClockHand({
   type,
@@ -19,18 +39,12 @@ function AnalogClockHand({
   baseColor: string;
 }): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
+  const [shouldFlash, setShouldFlash] = useState<boolean>(false);
 
   const handLength =
     (type === HandType.Hour ? clockSize / 3 : clockSize / 2.5) * 0.9;
 
   const handWidth = type === HandType.Hour ? 10 : 6;
-
-  const handColor =
-    type === HandType.Hour && clockState.mode === "HourAdjustable"
-      ? "black"
-      : type === HandType.Minute && clockState.mode === "MinuteAdjustable"
-      ? "black"
-      : baseColor;
 
   const handDegree =
     type === HandType.Hour
@@ -40,28 +54,44 @@ function AnalogClockHand({
       : 0;
 
   const onDoubleClick = () => {
-    setClockState((prev) => {
-      if (type === HandType.Hour && prev.mode === "MinuteAdjustable") {
-        return { ...prev, mode: "HourAdjustable" };
-      }
+    if (type === HandType.Hour && clockState.mode === "MinuteAdjustable") {
+      setClockState((prev) => ({ ...prev, mode: "HourAdjustable" }));
+    }
 
-      if (type === HandType.Minute && prev.mode === "HourAdjustable") {
-        return { ...prev, mode: "MinuteAdjustable" };
-      }
-
-      return prev;
-    });
+    if (type === HandType.Minute && clockState.mode === "HourAdjustable") {
+      setClockState((prev) => ({ ...prev, mode: "MinuteAdjustable" }));
+    }
   };
 
+  useEffect(() => {
+    if (!isClockAdjustable(clockState)) {
+      setShouldFlash(false);
+    } else if (
+      type === HandType.Hour &&
+      clockState.mode === "MinuteAdjustable"
+    ) {
+      setShouldFlash(false);
+    } else if (
+      type === HandType.Minute &&
+      clockState.mode === "HourAdjustable"
+    ) {
+      setShouldFlash(false);
+    } else {
+      setShouldFlash(true);
+    }
+  }, [clockState, type]);
+
   return (
-    <div
+    <FlashableDiv
+      isFlashing={shouldFlash}
+      color={baseColor}
       onDoubleClick={onDoubleClick}
       style={{
-        ...makeHandStyle(handColor, handLength, handWidth),
+        ...makeHandStyle(baseColor, handLength, handWidth),
         transform: `rotate(${handDegree}deg)`,
         zIndex: zIndex,
       }}
-    />
+    ></FlashableDiv>
   );
 }
 
@@ -84,5 +114,4 @@ const makeHandStyle = (
 };
 
 export { HandType };
-
 export default AnalogClockHand;
