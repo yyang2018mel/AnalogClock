@@ -3,9 +3,11 @@ import React from "react";
 function ClockFace({
   zIndex,
   clockSize,
+  textColor,
   showMinute = false,
 }: {
   clockSize: number;
+  textColor: string;
   zIndex: number;
   showMinute: boolean;
 }): React.JSX.Element {
@@ -16,7 +18,13 @@ function ClockFace({
       {hours.map((hour) => (
         <div
           key={hour}
-          style={makeClockNumberStyle(hour, clockSize, clockSize / 20, "hour")}
+          style={makeClockNumberStyle(
+            hour,
+            clockSize,
+            clockSize / 20,
+            "hour",
+            textColor
+          )}
         >
           {hour}
         </div>
@@ -29,7 +37,8 @@ function ClockFace({
               minute,
               clockSize,
               clockSize / 50,
-              "minute"
+              "minute",
+              textColor
             )}
           >
             {minute}
@@ -44,7 +53,8 @@ const makeClockNumberStyle = (
   number: number,
   clockSize: number,
   fontSize: number,
-  unit: "hour" | "minute"
+  unit: "hour" | "minute",
+  textColor: string
 ): React.CSSProperties => {
   const adjustedNumber = unit === "hour" ? number : number / 5;
   const angle = ((adjustedNumber - 3) * 30 * Math.PI) / 180;
@@ -53,7 +63,7 @@ const makeClockNumberStyle = (
   const y = radius * Math.sin(angle);
 
   return {
-    color: "#000",
+    color: textColor,
     fontSize: fontSize,
     fontWeight: unit === "hour" ? "bold" : "normal",
     position: "absolute",

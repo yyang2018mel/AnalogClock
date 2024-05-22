@@ -14,8 +14,13 @@ function AnalogClock({
 }: {
   clockConfig: ClockConfig;
 }): React.JSX.Element {
-  const { clockSize, backgroundImgIndex, hourHandColor, minuteHandColor } =
-    clockConfig;
+  const {
+    clockSize,
+    backgroundImgIndex,
+    hourHandColor,
+    minuteHandColor,
+    textColor,
+  } = clockConfig;
   const { clockState } = React.useContext(ClockContext)!;
   const backgroundImageUrl =
     backgroundImgIndex !== null ? ClockImageUrls[backgroundImgIndex] : "";
@@ -42,6 +47,7 @@ function AnalogClock({
         <ClockFace
           zIndex={30}
           clockSize={clockSize}
+          textColor={textColor}
           showMinute={isClockAdjustable(clockState)}
         />
       </AnalogClockFrame>
