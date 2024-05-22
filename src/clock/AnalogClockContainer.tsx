@@ -15,6 +15,7 @@ const makeClockContainerStyle = (clockSize: number): React.CSSProperties => {
     width: clockSize,
     height: clockSize,
     position: "relative",
+    display: "flex",
   };
 };
 

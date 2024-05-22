@@ -27,9 +27,9 @@ function AnalogClockHand({
 
   const handColor =
     type === HandType.Hour && clockState.mode === "HourAdjustable"
-      ? "green"
+      ? "black"
       : type === HandType.Minute && clockState.mode === "MinuteAdjustable"
-      ? "green"
+      ? "black"
       : baseColor;
 
   const handDegree =

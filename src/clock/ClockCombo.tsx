@@ -23,20 +23,48 @@ import ScienceIcon from "@mui/icons-material/Science";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { CirclePicker } from "react-color";
 
-type ClockConfig = {
+export type ClockConfig = {
   clockSize: number;
-  hourHandColor: [string, string];
-  minuteHandColor: [string, string];
+  hourHandColor: string;
+  minuteHandColor: string;
   backgroundImgIndex: number | null;
 };
 
 const DefaultClockConfig: ClockConfig = {
   clockSize: 250,
-  hourHandColor: ["orange", "yellow"],
-  minuteHandColor: ["red", "pink"],
+  hourHandColor: "orange",
+  minuteHandColor: "red",
   backgroundImgIndex: null,
 };
+
+function CircleColorPicker({
+  title,
+  initColor,
+  onColorChange,
+}: {
+  title: string;
+  initColor: string;
+  onColorChange: (color: string) => void;
+}) {
+  const [circledColor, setCircledColor] = useState<string>(initColor);
+
+  return (
+    <>
+      <div>{title}</div>
+      <CirclePicker
+        color={circledColor}
+        circleSize={18}
+        circleSpacing={10}
+        onChange={(color: { hex: string }, _: any) => {
+          setCircledColor(color.hex);
+          onColorChange(color.hex);
+        }}
+      />
+    </>
+  );
+}
 
 function ClockConfigurationDialog({
   initConfig,
@@ -51,7 +79,6 @@ function ClockConfigurationDialog({
   commitClockConfig: (c: ClockConfig) => void;
   onClose: () => void;
 }): React.JSX.Element {
-  // const [isApplied, setIsApplied] = useState<boolean>(false);
   const workingConfigRef = useRef<ClockConfig>(initConfig);
 
   const onDialogApply = () => {
@@ -131,6 +158,41 @@ function ClockConfigurationDialog({
             />
           </AccordionDetails>
         </Accordion>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            Coloring
+          </AccordionSummary>
+          <AccordionDetails>
+            <CircleColorPicker
+              title="Hour Hand"
+              initColor={workingConfigRef.current.hourHandColor}
+              onColorChange={(color) => {
+                workingConfigRef.current = {
+                  ...workingConfigRef.current,
+                  hourHandColor: color,
+                };
+                stageClockConfig((prev) => ({
+                  ...prev,
+                  hourHandColor: color,
+                }));
+              }}
+            />
+            <CircleColorPicker
+              title="Minute Hand"
+              initColor={workingConfigRef.current.minuteHandColor}
+              onColorChange={(color) => {
+                workingConfigRef.current = {
+                  ...workingConfigRef.current,
+                  minuteHandColor: color,
+                };
+                stageClockConfig((prev) => ({
+                  ...prev,
+                  minuteHandColor: color,
+                }));
+              }}
+            />
+          </AccordionDetails>
+        </Accordion>
       </DialogContent>
 
       <DialogActions>
@@ -170,14 +232,7 @@ function ClockCombo(): React.JSX.Element {
   return (
     <>
       <ClockContext.Provider value={{ clockState, setClockState }}>
-        <AnalogClock
-          clockSize={clockConfig.clockSize}
-          backgroundImageUrl={
-            clockConfig.backgroundImgIndex !== null
-              ? ClockImageUrls[clockConfig.backgroundImgIndex]
-              : ""
-          }
-        />
+        <AnalogClock clockConfig={clockConfig} />
         <div style={{ height: 10 }} />
         <DigitalClock />
         <div style={{ height: 10 }} />
