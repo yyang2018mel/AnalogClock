@@ -3,7 +3,13 @@ import { ClockState } from "./ClockState";
 import { ClockContext } from "./Context";
 import AnalogClock from "./AnalogClock";
 import DigitalClock from "./DigtalClock";
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Box,
+  Switch,
+  Typography,
+} from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ScienceIcon from "@mui/icons-material/Science";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -36,13 +42,25 @@ function ClockCombo(): React.JSX.Element {
     setClockUserMode(clockUserModeBeforeConfig.current);
   }, []);
 
+  const [showDigital, setShowDigital] = useState<boolean>(false);
+
   return (
     <>
       <ClockContext.Provider value={{ clockState, setClockState }}>
         <AnalogClock clockConfig={clockConfig} />
         <div style={{ height: 10 }} />
-        <DigitalClock />
-        <div style={{ height: 10 }} />
+        {showDigital && <DigitalClock />}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Switch
+            checked={showDigital}
+            onChange={(e) => {
+              setShowDigital(e.target.checked);
+            }}
+          />
+          <Typography variant="button">{`${
+            showDigital ? "Hide" : "Show"
+          } Digital Clock`}</Typography>
+        </Box>
       </ClockContext.Provider>
 
       <MClockConfigurationDialog
