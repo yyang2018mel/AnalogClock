@@ -7,7 +7,6 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
-  Grid,
   Switch,
   Typography,
 } from "@mui/material";

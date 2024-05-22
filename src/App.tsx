@@ -1,4 +1,3 @@
-import "./App.css";
 import ClockCombo from "./clock/ClockCombo";
 
 function App() {

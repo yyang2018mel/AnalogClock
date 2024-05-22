@@ -44,7 +44,7 @@ function AnalogClockHand({
   const handLength =
     (type === HandType.Hour ? clockSize / 3 : clockSize / 2.5) * 0.9;
 
-  const handWidth = type === HandType.Hour ? 10 : 6;
+  const handWidth = type === HandType.Hour ? 12 : 8;
 
   const handDegree =
     type === HandType.Hour
