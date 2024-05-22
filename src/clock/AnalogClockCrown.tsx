@@ -39,7 +39,8 @@ function Triangle({
       onDoubleClick={(e) => {
         e.stopPropagation();
       }}
-      onMouseDown={() => {
+      onMouseDown={(e) => {
+        if (e.button !== 0) return; // only respond to left-click
         handleMouseDown();
         setIntervalId(setInterval(handleMouseDown, 200)); // Fire every 200ms
       }}
