@@ -124,7 +124,13 @@ function ClockConfigurationDialog({
             <Typography variant="caption">Coloring</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Grid container spacing={2}>
+            <Grid
+              container
+              spacing={3}
+              direction={"row"}
+              justifyContent={"space-between"}
+              alignItems="center"
+            >
               <Grid item xs={5}>
                 <CircleColorPicker
                   title="Hour Hand"
