@@ -21,9 +21,9 @@ function AnalogClockHand({
   const { clockState, setClockState } = React.useContext(ClockContext)!;
 
   const handLength =
-    (type === HandType.Hour ? clockSize / 3 : clockSize / 2.5) * 0.85;
+    (type === HandType.Hour ? clockSize / 3 : clockSize / 2.5) * 0.9;
 
-  const handWidth = type === HandType.Hour ? 8 : 6;
+  const handWidth = type === HandType.Hour ? 10 : 6;
 
   const handColor =
     type === HandType.Hour && clockState.mode === "HourAdjustable"

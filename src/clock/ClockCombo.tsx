@@ -23,7 +23,7 @@ import ScienceIcon from "@mui/icons-material/Science";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { CirclePicker } from "react-color";
+import CircleColorPicker from "../generic/CircleColorPicker";
 
 export type ClockConfig = {
   clockSize: number;
@@ -38,33 +38,6 @@ const DefaultClockConfig: ClockConfig = {
   minuteHandColor: "red",
   backgroundImgIndex: null,
 };
-
-function CircleColorPicker({
-  title,
-  initColor,
-  onColorChange,
-}: {
-  title: string;
-  initColor: string;
-  onColorChange: (color: string) => void;
-}) {
-  const [circledColor, setCircledColor] = useState<string>(initColor);
-
-  return (
-    <>
-      <div>{title}</div>
-      <CirclePicker
-        color={circledColor}
-        circleSize={18}
-        circleSpacing={10}
-        onChange={(color: { hex: string }, _: any) => {
-          setCircledColor(color.hex);
-          onColorChange(color.hex);
-        }}
-      />
-    </>
-  );
-}
 
 function ClockConfigurationDialog({
   initConfig,
