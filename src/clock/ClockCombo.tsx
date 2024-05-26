@@ -38,7 +38,11 @@ function ClockCombo(): React.JSX.Element {
     Cookies.set("clockConfigCookie", JSON.stringify(clockConfig), {
       expires: 1,
     });
-    Cookies.set("clockUserModeCookie", clockUserMode, { expires: 1 });
+
+    if (clockUserMode !== "Setup") {
+      Cookies.set("clockUserModeCookie", clockUserMode, { expires: 1 });
+    }
+
     Cookies.set("clockStateCookie", JSON.stringify(clockState), { expires: 1 });
   }, [clockState, clockConfig, clockUserMode]);
 
