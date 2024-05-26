@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ClockState } from "./ClockState";
 import { ClockContext } from "./Context";
 import AnalogClock from "./AnalogClock";
@@ -15,22 +15,55 @@ import ScienceIcon from "@mui/icons-material/Science";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { ClockConfig, DefaultClockConfig } from "./ClockConfig";
 import ClockConfigurationDialog from "./ClockConfigurationDialog";
+import Cookies from "js-cookie";
 
 type ClockUserMode = "Setup" | "Live" | "Static";
 const MClockConfigurationDialog = React.memo(ClockConfigurationDialog);
 
 function ClockCombo(): React.JSX.Element {
-  const [clockState, setClockState] = useState<ClockState>({
-    hour: 1,
-    minute: 30,
-    mode: "PausedNoAdjustable",
+  const [clockState, setClockState] = useState<ClockState>(() => {
+    const fromCookie = Cookies.get("clockStateCookie");
+
+    if (fromCookie) {
+      return JSON.parse(fromCookie);
+    }
+
+    return {
+      hour: 1,
+      minute: 30,
+      mode: "PausedNoAdjustable",
+    };
   });
 
-  const [clockUserMode, setClockUserMode] = useState<ClockUserMode>("Static");
+  const [clockConfig, setClockConfig] = useState<ClockConfig>(() => {
+    const fromCookie = Cookies.get("clockConfigCookie");
+
+    if (fromCookie) {
+      return JSON.parse(fromCookie);
+    }
+
+    return DefaultClockConfig;
+  });
+
+  const [clockUserMode, setClockUserMode] = useState<ClockUserMode>(() => {
+    const fromCookie = Cookies.get("clockUserModeCookie");
+
+    if (fromCookie) {
+      return fromCookie as ClockUserMode;
+    }
+
+    return "Static";
+  });
+
   const clockUserModeBeforeConfig = useRef<ClockUserMode>(clockUserMode);
 
-  const [clockConfig, setClockConfig] =
-    useState<ClockConfig>(DefaultClockConfig);
+  useEffect(() => {
+    Cookies.set("clockConfigCookie", JSON.stringify(clockConfig), {
+      expires: 1,
+    });
+    Cookies.set("clockUserModeCookie", clockUserMode, { expires: 1 });
+    Cookies.set("clockStateCookie", JSON.stringify(clockState), { expires: 1 });
+  }, [clockState, clockConfig, clockUserMode]);
 
   const commitedClockConfig = useRef<ClockConfig>(clockConfig);
 
