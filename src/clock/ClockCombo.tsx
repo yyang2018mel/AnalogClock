@@ -127,6 +127,7 @@ function ClockCombo(): React.JSX.Element {
         <BottomNavigationAction
           label="Live"
           value="Live"
+          disabled={true} // TODO: Implement Live mode
           icon={<AccessTimeIcon />}
         />
         <BottomNavigationAction
