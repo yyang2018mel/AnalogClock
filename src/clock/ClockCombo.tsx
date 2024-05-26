@@ -46,6 +46,26 @@ function ClockCombo(): React.JSX.Element {
     Cookies.set("clockStateCookie", JSON.stringify(clockState), { expires: 1 });
   }, [clockState, clockConfig, clockUserMode]);
 
+  useEffect(() => {
+    if (clockUserMode === "Live") {
+      const timer = setInterval(() => {
+        setClockState((prev) => {
+          const d = new Date();
+          return {
+            ...prev,
+            hour: d.getHours(),
+            minute: d.getMinutes(),
+            second: d.getSeconds(),
+          };
+        });
+      }, 500);
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [clockUserMode]);
+
   const commitedClockConfig = useRef<ClockConfig>(clockConfig);
 
   const commitClockConfig = useCallback((c: ClockConfig) => {
@@ -112,7 +132,6 @@ function ClockCombo(): React.JSX.Element {
         <BottomNavigationAction
           label="Live"
           value="Live"
-          disabled={true} // TODO: Implement Live mode
           icon={<AccessTimeIcon />}
         />
         <BottomNavigationAction
