@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export interface TimeState {
   hour: number;
   minute: number;
@@ -45,6 +47,16 @@ export const DefaultClockState: ClockState = {
   hour: 1,
   minute: 30,
   mode: "PausedNoAdjustable",
+}
+
+export const getInitialClockState = () => {
+  const fromCookie = Cookies.get("clockStateCookie");
+
+  if (fromCookie) {
+    return JSON.parse(fromCookie);
+  }
+
+  return DefaultClockState;
 }
 
 export function isClockAdjustable(clockState: ClockState): boolean {

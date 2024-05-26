@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ClockState, DefaultClockState } from "./ClockState";
+import { ClockState, getInitialClockState } from "./ClockState";
 import { ClockContext } from "./Context";
 import AnalogClock from "./AnalogClock";
 import DigitalClock from "./DigtalClock";
@@ -13,43 +13,24 @@ import {
 import SettingsIcon from "@mui/icons-material/Settings";
 import ScienceIcon from "@mui/icons-material/Science";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { ClockConfig, DefaultClockConfig } from "./ClockConfig";
+import { ClockConfig, getInitialClockConfig } from "./ClockConfig";
 import ClockConfigurationDialog from "./ClockConfigurationDialog";
 import Cookies from "js-cookie";
+import { ClockUserMode, getInitialClockUserMode } from "./ClockUserMode";
 
-type ClockUserMode = "Setup" | "Live" | "Static";
 const MClockConfigurationDialog = React.memo(ClockConfigurationDialog);
 
 function ClockCombo(): React.JSX.Element {
-  const [clockState, setClockState] = useState<ClockState>(() => {
-    const fromCookie = Cookies.get("clockStateCookie");
+  const [clockState, setClockState] =
+    useState<ClockState>(getInitialClockState);
 
-    if (fromCookie) {
-      return JSON.parse(fromCookie);
-    }
+  const [clockConfig, setClockConfig] = useState<ClockConfig>(
+    getInitialClockConfig
+  );
 
-    return DefaultClockState;
-  });
-
-  const [clockConfig, setClockConfig] = useState<ClockConfig>(() => {
-    const fromCookie = Cookies.get("clockConfigCookie");
-
-    if (fromCookie) {
-      return JSON.parse(fromCookie);
-    }
-
-    return DefaultClockConfig;
-  });
-
-  const [clockUserMode, setClockUserMode] = useState<ClockUserMode>(() => {
-    const fromCookie = Cookies.get("clockUserModeCookie");
-
-    if (fromCookie) {
-      return fromCookie as ClockUserMode;
-    }
-
-    return "Static";
-  });
+  const [clockUserMode, setClockUserMode] = useState<ClockUserMode>(
+    getInitialClockUserMode
+  );
 
   const clockUserModeBeforeConfig = useRef<ClockUserMode>(clockUserMode);
 

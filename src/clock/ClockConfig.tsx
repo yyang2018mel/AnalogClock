@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export type ClockConfig = {
   clockSize: number;
   hourHandColor: string;
@@ -12,4 +14,14 @@ export const DefaultClockConfig: ClockConfig = {
   minuteHandColor: "red",
   textColor: "black",
   backgroundImgIndex: null,
+};
+
+export const getInitialClockConfig = () => {
+  const fromCookie = Cookies.get("clockConfigCookie");
+
+  if (fromCookie) {
+    return JSON.parse(fromCookie);
+  }
+
+  return DefaultClockConfig;
 };
