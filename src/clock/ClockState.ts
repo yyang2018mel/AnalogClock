@@ -41,6 +41,12 @@ export interface ClockState extends TimeState {
   mode: ClockMode;
 };
 
+export const DefaultClockState: ClockState = {
+  hour: 1,
+  minute: 30,
+  mode: "PausedNoAdjustable",
+}
+
 export function isClockAdjustable(clockState: ClockState): boolean {
   return (
     clockState.mode === "HourAdjustable" || clockState.mode === "MinuteAdjustable"

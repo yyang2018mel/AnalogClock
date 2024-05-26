@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ClockState } from "./ClockState";
+import { ClockState, DefaultClockState } from "./ClockState";
 import { ClockContext } from "./Context";
 import AnalogClock from "./AnalogClock";
 import DigitalClock from "./DigtalClock";
@@ -28,11 +28,7 @@ function ClockCombo(): React.JSX.Element {
       return JSON.parse(fromCookie);
     }
 
-    return {
-      hour: 1,
-      minute: 30,
-      mode: "PausedNoAdjustable",
-    };
+    return DefaultClockState;
   });
 
   const [clockConfig, setClockConfig] = useState<ClockConfig>(() => {
