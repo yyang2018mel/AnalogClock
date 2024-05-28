@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { ClockImageUrls } from "./BackgroundImages";
 import {
   Accordion,
@@ -10,8 +10,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
   Grid,
   Paper,
+  Radio,
+  RadioGroup,
   Slider,
   Typography,
 } from "@mui/material";
@@ -19,6 +23,32 @@ import PictureSelectionGrid from "../generic/PictureSelector";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircleColorPicker from "../generic/CircleColorPicker";
 import { ClockConfig } from "./ClockConfig";
+
+function MinuteOrSecondChooser({
+  initValue,
+  onChange,
+}: {
+  initValue: "Second" | "Minute";
+  onChange: (value: "Second" | "Minute") => void;
+}): React.JSX.Element {
+  const [value, setValue] = useState(initValue);
+
+  return (
+    <FormControl>
+      <RadioGroup
+        row
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value as "Second" | "Minute");
+          onChange(e.target.value as "Second" | "Minute");
+        }}
+      >
+        <FormControlLabel value="Minute" control={<Radio />} label="Minute" />
+        <FormControlLabel value="Second" control={<Radio />} label="Second" />
+      </RadioGroup>
+    </FormControl>
+  );
+}
 
 function ClockConfigurationDialog({
   initConfig,
