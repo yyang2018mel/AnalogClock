@@ -28,7 +28,6 @@ type ConfigDialogState = {
   configuringSize: boolean;
   configuringColor: boolean;
   configuringGranularity: boolean;
-  granularity: "Second" | "Minute";
 };
 
 function MinuteOrSecondChooser({
@@ -77,8 +76,10 @@ function ClockConfigurationDialog({
     configuringColor: false,
     configuringSize: false,
     configuringGranularity: false,
-    granularity: "Minute",
   });
+
+  const [allowSecondHandColorConfig, setAllowSecondHandColorConfig] =
+    useState<boolean>(Boolean(initConfig.secondHandColor));
 
   const onDialogApply = () => {
     commitClockConfig(workingConfigRef.current);
@@ -88,6 +89,7 @@ function ClockConfigurationDialog({
   const onDialogCloseWithoutApply = () => {
     // rollback
     stageClockConfig(initConfig);
+    setAllowSecondHandColorConfig(Boolean(initConfig.secondHandColor));
     onClose();
   };
 
@@ -179,9 +181,9 @@ function ClockConfigurationDialog({
           </AccordionSummary>
           <AccordionDetails>
             <MinuteOrSecondChooser
-              initValue={dialogState.granularity}
+              initValue={initConfig.secondHandColor ? "Second" : "Minute"}
               onChange={(val) => {
-                setDialogState((prev) => ({ ...prev, granularity: val }));
+                setAllowSecondHandColorConfig(val === "Second");
                 if (val === "Minute") {
                   stageClockConfig((prev) => ({
                     ...prev,
@@ -252,7 +254,7 @@ function ClockConfigurationDialog({
                   }}
                 />
               </Grid>
-              {dialogState.granularity === "Second" && (
+              {allowSecondHandColorConfig && (
                 <Grid item>
                   <CircleColorPicker
                     title="Second Hand"
