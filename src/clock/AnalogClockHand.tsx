@@ -32,16 +32,16 @@ function AnalogClockHand({
   type,
   zIndex,
   clockSize,
-  baseColor,
+  handColor,
 }: {
   zIndex: number;
   clockSize: number;
   type: HandType;
-  baseColor: string;
+  handColor: string;
 }): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
   const [shouldFlash, setShouldFlash] = useState<boolean>(false);
-
+  const handOpacity: number = type == HandType.Second ? 0.6 : 1.0;
   const handLength =
     (type === HandType.Hour
       ? clockSize / 3
@@ -91,10 +91,10 @@ function AnalogClockHand({
   return (
     <FlashableDiv
       isFlashing={shouldFlash}
-      color={baseColor}
+      color={handColor}
       onDoubleClick={onDoubleClick}
       style={{
-        ...makeHandStyle(baseColor, handLength, handWidth),
+        ...makeHandStyle(handColor, handLength, handWidth, handOpacity),
         transform: `rotate(${handDegree}deg)`,
         zIndex: zIndex,
       }}
@@ -105,12 +105,14 @@ function AnalogClockHand({
 const makeHandStyle = (
   color: string,
   handLength: number,
-  handWidth: number
+  handWidth: number,
+  opacity: number = 1.0
 ): React.CSSProperties => {
   return {
     width: handWidth,
     height: handLength,
     backgroundColor: color,
+    opacity: opacity,
     position: "absolute",
     left: `calc(50% - ${handWidth / 2}px)`,
     top: `calc(50% - ${handLength}px)`,

@@ -39,20 +39,20 @@ function AnalogClock({
           zIndex={10}
           clockSize={clockSize}
           type={HandType.Hour}
-          baseColor={hourHandColor}
+          handColor={hourHandColor}
         />
         <AnalogClockHand
           zIndex={20}
           clockSize={clockSize}
           type={HandType.Minute}
-          baseColor={minuteHandColor}
+          handColor={minuteHandColor}
         />
         {secondHandColor && (
           <AnalogClockHand
             zIndex={30}
             clockSize={clockSize}
             type={HandType.Second}
-            baseColor={secondHandColor as string}
+            handColor={secondHandColor as string}
           />
         )}
         <ClockFace
