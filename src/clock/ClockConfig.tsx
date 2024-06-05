@@ -4,6 +4,7 @@ export type ClockConfig = {
   clockSize: number;
   hourHandColor: string;
   minuteHandColor: string;
+  secondHandColor: string | null;
   textColor: string;
   backgroundImgIndex: number | null;
 };
@@ -12,6 +13,7 @@ export const DefaultClockConfig: ClockConfig = {
   clockSize: 550,
   hourHandColor: "orange",
   minuteHandColor: "red",
+  secondHandColor: null,
   textColor: "black",
   backgroundImgIndex: null,
 };

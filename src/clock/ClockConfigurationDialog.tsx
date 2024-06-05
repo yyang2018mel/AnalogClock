@@ -180,9 +180,19 @@ function ClockConfigurationDialog({
           <AccordionDetails>
             <MinuteOrSecondChooser
               initValue={dialogState.granularity}
-              onChange={(val) =>
-                setDialogState((prev) => ({ ...prev, granularity: val }))
-              }
+              onChange={(val) => {
+                setDialogState((prev) => ({ ...prev, granularity: val }));
+                if (!workingConfigRef.current.secondHandColor) {
+                  workingConfigRef.current = {
+                    ...workingConfigRef.current,
+                    secondHandColor: "black",
+                  };
+                  stageClockConfig((prev) => ({
+                    ...prev,
+                    secondHandColor: "black",
+                  }));
+                }
+              }}
             />
           </AccordionDetails>
         </Accordion>
@@ -239,15 +249,17 @@ function ClockConfigurationDialog({
                 <Grid item>
                   <CircleColorPicker
                     title="Second Hand"
-                    initColor={workingConfigRef.current.textColor}
+                    initColor={
+                      workingConfigRef.current.secondHandColor as string
+                    }
                     onColorChange={(color) => {
                       workingConfigRef.current = {
                         ...workingConfigRef.current,
-                        textColor: color,
+                        secondHandColor: color,
                       };
                       stageClockConfig((prev) => ({
                         ...prev,
-                        textColor: color,
+                        secondHandColor: color,
                       }));
                     }}
                   />
