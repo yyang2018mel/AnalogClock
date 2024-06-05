@@ -56,6 +56,8 @@ function AnalogClockHand({
       ? getClockHandDegreeFromTime(clockState).hourHandDegree
       : type === HandType.Minute
       ? getClockHandDegreeFromTime(clockState).minuteHandDegree
+      : type === HandType.Second
+      ? getClockHandDegreeFromTime(clockState).secondHandDegree
       : 0;
 
   const onDoubleClick = () => {

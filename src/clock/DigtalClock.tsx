@@ -27,6 +27,7 @@ function DigitalClock(): React.JSX.Element {
             setClockState({
               hour: newTimeMaybe.hour(),
               minute: newTimeMaybe.minute(),
+              second: newTimeMaybe.second(),
               mode: clockState.mode,
             });
           }
