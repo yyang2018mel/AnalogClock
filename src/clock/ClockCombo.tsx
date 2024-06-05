@@ -18,8 +18,6 @@ import ClockConfigurationDialog from "./ClockConfigurationDialog";
 import Cookies from "js-cookie";
 import { ClockUserMode, getInitialClockUserMode } from "./ClockUserMode";
 
-const MClockConfigurationDialog = React.memo(ClockConfigurationDialog);
-
 function ClockCombo(): React.JSX.Element {
   const [clockState, setClockState] =
     useState<ClockState>(getInitialClockState);
@@ -105,7 +103,7 @@ function ClockCombo(): React.JSX.Element {
         </Box>
       </ClockContext.Provider>
 
-      <MClockConfigurationDialog
+      <ClockConfigurationDialog
         initConfig={commitedClockConfig.current}
         shouldOpen={clockUserMode === "Setup"}
         stageClockConfig={setClockConfig}

@@ -23,6 +23,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircleColorPicker from "../generic/CircleColorPicker";
 import { ClockConfig } from "./ClockConfig";
 
+type ConfigDialogState = {
+  configuringBackgroundImage: boolean;
+  configuringSize: boolean;
+  configuringColor: boolean;
+  configuringGranularity: boolean;
+  granularity: "Second" | "Minute";
+};
+
 function MinuteOrSecondChooser({
   initValue,
   onChange,
@@ -64,6 +72,14 @@ function ClockConfigurationDialog({
 }): React.JSX.Element {
   const workingConfigRef = useRef<ClockConfig>(initConfig);
 
+  const [dialogState, setDialogState] = useState<ConfigDialogState>({
+    configuringBackgroundImage: false,
+    configuringColor: false,
+    configuringSize: false,
+    configuringGranularity: false,
+    granularity: "Minute",
+  });
+
   const onDialogApply = () => {
     commitClockConfig(workingConfigRef.current);
     onClose();
@@ -94,7 +110,15 @@ function ClockConfigurationDialog({
         </DialogActions>
       </Box>
       <DialogContent>
-        <Accordion>
+        <Accordion
+          expanded={dialogState.configuringBackgroundImage}
+          onChange={(e, ex) =>
+            setDialogState((prev) => ({
+              ...prev,
+              configuringBackgroundImage: ex,
+            }))
+          }
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="caption">Background Image</Typography>
           </AccordionSummary>
@@ -115,7 +139,12 @@ function ClockConfigurationDialog({
             />
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion
+          expanded={dialogState && dialogState.configuringSize}
+          onChange={(e, ex) =>
+            setDialogState((prev) => ({ ...prev, configuringSize: ex }))
+          }
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="caption">Sizing</Typography>
           </AccordionSummary>
@@ -139,7 +168,30 @@ function ClockConfigurationDialog({
             />
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion
+          expanded={dialogState.configuringGranularity}
+          onChange={(e, ex) =>
+            setDialogState((prev) => ({ ...prev, configuringGranularity: ex }))
+          }
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="caption">Minimum</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <MinuteOrSecondChooser
+              initValue={dialogState.granularity}
+              onChange={(val) =>
+                setDialogState((prev) => ({ ...prev, granularity: val }))
+              }
+            />
+          </AccordionDetails>
+        </Accordion>
+        <Accordion
+          expanded={dialogState.configuringColor}
+          onChange={(e, ex) =>
+            setDialogState((prev) => ({ ...prev, configuringColor: ex }))
+          }
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="caption">Coloring</Typography>
           </AccordionSummary>
@@ -147,11 +199,11 @@ function ClockConfigurationDialog({
             <Grid
               container
               spacing={3}
-              direction={"row"}
+              direction={"column"}
               justifyContent={"space-between"}
-              alignItems="center"
+              alignItems="left"
             >
-              <Grid item xs={5}>
+              <Grid item>
                 <CircleColorPicker
                   title="Hour Hand"
                   initColor={workingConfigRef.current.hourHandColor}
@@ -167,7 +219,7 @@ function ClockConfigurationDialog({
                   }}
                 />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item>
                 <CircleColorPicker
                   title="Minute Hand"
                   initColor={workingConfigRef.current.minuteHandColor}
@@ -183,7 +235,25 @@ function ClockConfigurationDialog({
                   }}
                 />
               </Grid>
-              <Grid item xs={5}>
+              {dialogState.granularity === "Second" && (
+                <Grid item>
+                  <CircleColorPicker
+                    title="Second Hand"
+                    initColor={workingConfigRef.current.textColor}
+                    onColorChange={(color) => {
+                      workingConfigRef.current = {
+                        ...workingConfigRef.current,
+                        textColor: color,
+                      };
+                      stageClockConfig((prev) => ({
+                        ...prev,
+                        textColor: color,
+                      }));
+                    }}
+                  />
+                </Grid>
+              )}
+              <Grid item>
                 <CircleColorPicker
                   title="Text"
                   initColor={workingConfigRef.current.textColor}
