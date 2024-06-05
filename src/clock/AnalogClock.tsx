@@ -11,7 +11,7 @@ import { ClockImageUrls } from "./BackgroundImages";
 
 function AnalogClock({
   clockConfig,
-  clockUserMode
+  clockUserMode,
 }: {
   clockConfig: ClockConfig;
   clockUserMode: "Setup" | "Live" | "Static";
@@ -21,7 +21,8 @@ function AnalogClock({
     backgroundImgIndex,
     hourHandColor,
     minuteHandColor,
-    textColor
+    secondHandColor,
+    textColor,
   } = clockConfig;
   const { clockState } = React.useContext(ClockContext)!;
   const backgroundImageUrl =
@@ -46,6 +47,14 @@ function AnalogClock({
           type={HandType.Minute}
           baseColor={minuteHandColor}
         />
+        {secondHandColor && (
+          <AnalogClockHand
+            zIndex={30}
+            clockSize={clockSize}
+            type={HandType.Second}
+            baseColor={secondHandColor as string}
+          />
+        )}
         <ClockFace
           zIndex={30}
           clockSize={clockSize}

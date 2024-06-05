@@ -182,14 +182,21 @@ function ClockConfigurationDialog({
               initValue={dialogState.granularity}
               onChange={(val) => {
                 setDialogState((prev) => ({ ...prev, granularity: val }));
-                if (!workingConfigRef.current.secondHandColor) {
+                if (val === "Minute") {
+                  stageClockConfig((prev) => ({
+                    ...prev,
+                    secondHandColor: null,
+                  }));
+                } else {
                   workingConfigRef.current = {
                     ...workingConfigRef.current,
-                    secondHandColor: "black",
+                    secondHandColor:
+                      workingConfigRef.current.secondHandColor ?? "black",
                   };
                   stageClockConfig((prev) => ({
                     ...prev,
-                    secondHandColor: "black",
+                    secondHandColor:
+                      workingConfigRef.current.secondHandColor ?? "black",
                   }));
                 }
               }}

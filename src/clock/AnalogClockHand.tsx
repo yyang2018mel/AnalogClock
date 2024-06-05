@@ -6,6 +6,7 @@ import styled, { css, keyframes } from "styled-components";
 enum HandType {
   Hour,
   Minute,
+  Second,
 }
 
 // Define a function that generates a keyframes animation
@@ -42,7 +43,11 @@ function AnalogClockHand({
   const [shouldFlash, setShouldFlash] = useState<boolean>(false);
 
   const handLength =
-    (type === HandType.Hour ? clockSize / 3 : clockSize / 2.5) * 0.9;
+    (type === HandType.Hour
+      ? clockSize / 3
+      : type === HandType.Minute
+      ? clockSize / 2.5
+      : clockSize / 2.4) * 0.9;
 
   const handWidth = type === HandType.Hour ? 12 : 8;
 
