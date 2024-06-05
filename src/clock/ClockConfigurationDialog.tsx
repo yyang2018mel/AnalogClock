@@ -6,14 +6,13 @@ import {
   AccordionSummary,
   Box,
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Drawer,
   FormControl,
   FormControlLabel,
   Grid,
-  Paper,
   Radio,
   RadioGroup,
   Slider,
@@ -77,23 +76,14 @@ function ClockConfigurationDialog({
   };
 
   return (
-    <Dialog
-      keepMounted
+    <Drawer
+      anchor="right"
+      // sx={{ width: "25vw" }}
+      PaperProps={{
+        sx: { width: "25vw" }, // Also apply the width to the Paper component inside the Drawer
+      }}
       open={shouldOpen}
-      scroll="paper"
       onClose={onDialogCloseWithoutApply}
-      PaperComponent={({ children }) => (
-        <Paper
-          style={{
-            width: "30%",
-            minHeight: "50%",
-            maxHeight: "90%",
-            marginLeft: "auto",
-          }}
-        >
-          {children}
-        </Paper>
-      )}
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <DialogTitle>Configuration</DialogTitle>
@@ -213,7 +203,7 @@ function ClockConfigurationDialog({
           </AccordionDetails>
         </Accordion>
       </DialogContent>
-    </Dialog>
+    </Drawer>
   );
 }
 
