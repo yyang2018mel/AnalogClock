@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import { getClockHandDegreeFromTime, isClockAdjustable } from "./ClockState";
+import {
+  ClockAdjustable,
+  getClockHandDegreeFromTime,
+  isClockAdjustable,
+} from "./ClockState";
 import styled, { css, keyframes } from "styled-components";
 
 enum HandType {
@@ -41,7 +45,7 @@ function AnalogClockHand({
 }): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
   const [shouldFlash, setShouldFlash] = useState<boolean>(false);
-  const handOpacity: number = type == HandType.Second ? 0.6 : 1.0;
+  const handOpacity: number = type === HandType.Second ? 0.6 : 1.0;
   const handLength =
     (type === HandType.Hour
       ? clockSize / 3
@@ -61,12 +65,20 @@ function AnalogClockHand({
       : 0;
 
   const onDoubleClick = () => {
-    if (type === HandType.Hour && clockState.mode === "MinuteAdjustable") {
-      setClockState((prev) => ({ ...prev, mode: "HourAdjustable" }));
-    }
+    if (!isClockAdjustable(clockState)) return;
 
-    if (type === HandType.Minute && clockState.mode === "HourAdjustable") {
-      setClockState((prev) => ({ ...prev, mode: "MinuteAdjustable" }));
+    if (type === HandType.Hour && clockState.mode !== ClockAdjustable.Hour) {
+      setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Hour }));
+    } else if (
+      type === HandType.Minute &&
+      clockState.mode !== ClockAdjustable.Minute
+    ) {
+      setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Minute }));
+    } else if (
+      type === HandType.Second &&
+      clockState.mode !== ClockAdjustable.Second
+    ) {
+      setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Second }));
     }
   };
 
@@ -75,12 +87,17 @@ function AnalogClockHand({
       setShouldFlash(false);
     } else if (
       type === HandType.Hour &&
-      clockState.mode === "MinuteAdjustable"
+      clockState.mode !== ClockAdjustable.Hour
     ) {
       setShouldFlash(false);
     } else if (
       type === HandType.Minute &&
-      clockState.mode === "HourAdjustable"
+      clockState.mode !== ClockAdjustable.Minute
+    ) {
+      setShouldFlash(false);
+    } else if (
+      type === HandType.Second &&
+      clockState.mode !== ClockAdjustable.Second
     ) {
       setShouldFlash(false);
     } else {

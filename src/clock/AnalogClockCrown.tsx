@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import { Backward, Forward, isClockAdjustable } from "./ClockState";
+import {
+  Backward,
+  ClockAdjustable,
+  Forward,
+  isClockAdjustable,
+  TimeUnit,
+} from "./ClockState";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
@@ -15,7 +21,12 @@ function Triangle({
   const handleMouseDown = () => {
     setClockState((prev) => {
       if (!isClockAdjustable(prev)) return prev;
-      const unit = prev.mode === "HourAdjustable" ? "hour" : "minute";
+      const unit: TimeUnit =
+        prev.mode === ClockAdjustable.Hour
+          ? "hour"
+          : prev.mode === ClockAdjustable.Minute
+          ? "minute"
+          : "second";
       const newTime =
         direction === "up" ? Backward(prev, unit) : Forward(prev, unit);
       return { ...prev, ...newTime };
@@ -60,7 +71,13 @@ function Triangle({
   );
 }
 
-function AnalogClockCrown({ zIndex, enabled }: { zIndex: number, enabled: boolean }): React.JSX.Element {
+function AnalogClockCrown({
+  zIndex,
+  enabled,
+}: {
+  zIndex: number;
+  enabled: boolean;
+}): React.JSX.Element {
   const styleSheet: React.CSSProperties = {
     width: "6%",
     height: "10%",
@@ -83,15 +100,14 @@ function AnalogClockCrown({ zIndex, enabled }: { zIndex: number, enabled: boolea
   return (
     <div
       style={styleSheet}
-      
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
         if (!enabled) return;
         if (!activated) {
-          setClockState((prev) => ({ ...prev, mode: "MinuteAdjustable" }));
+          setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Minute }));
         } else {
-          setClockState((prev) => ({ ...prev, mode: "PausedNoAdjustable" }));
+          setClockState((prev) => ({ ...prev, mode: "JustPaused" }));
         }
         setActivated(!activated);
       }}
