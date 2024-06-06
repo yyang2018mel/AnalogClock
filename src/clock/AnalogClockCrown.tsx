@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import {
-  Backward,
-  ClockAdjustable,
-  Forward,
-  isClockAdjustable,
-} from "./ClockState";
+import { Backward, Forward, isClockAdjustable } from "./ClockState";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { HandType } from "./AnalogClockHand";
@@ -20,13 +15,8 @@ function Triangle({
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const handleMouseDown = () => {
     setClockState((prev) => {
-      if (!isClockAdjustable(prev)) return prev;
-      const unit: HandType =
-        prev.mode === ClockAdjustable.Hour
-          ? HandType.Hour
-          : prev.mode === ClockAdjustable.Minute
-          ? HandType.Minute
-          : HandType.Second;
+      if (!isClockAdjustable(prev.mode)) return prev;
+      const unit: HandType = prev.mode.adjustableHand;
       const newTime =
         direction === "up" ? Backward(prev, unit) : Forward(prev, unit);
       return { ...prev, ...newTime };
@@ -105,7 +95,10 @@ function AnalogClockCrown({
         e.stopPropagation();
         if (!enabled) return;
         if (!activated) {
-          setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Minute }));
+          setClockState((prev) => ({
+            ...prev,
+            mode: { adjustableHand: HandType.Minute },
+          }));
         } else {
           setClockState((prev) => ({ ...prev, mode: "JustPaused" }));
         }

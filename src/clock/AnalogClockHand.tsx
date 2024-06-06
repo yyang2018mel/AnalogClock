@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import {
-  ClockAdjustable,
-  getClockHandDegreeFromTime,
-  isClockAdjustable,
-} from "./ClockState";
+import { getClockHandDegreeFromTime, isClockAdjustable } from "./ClockState";
 import styled, { css, keyframes } from "styled-components";
 
 export enum HandType {
@@ -65,44 +61,21 @@ function AnalogClockHand({
       : 0;
 
   const onDoubleClick = () => {
-    if (!isClockAdjustable(clockState)) return;
+    if (!isClockAdjustable(clockState.mode)) return;
 
-    if (type === HandType.Hour && clockState.mode !== ClockAdjustable.Hour) {
-      setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Hour }));
-    } else if (
-      type === HandType.Minute &&
-      clockState.mode !== ClockAdjustable.Minute
-    ) {
-      setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Minute }));
-    } else if (
-      type === HandType.Second &&
-      clockState.mode !== ClockAdjustable.Second
-    ) {
-      setClockState((prev) => ({ ...prev, mode: ClockAdjustable.Second }));
+    if (clockState.mode.adjustableHand !== type) {
+      setClockState((prev) => ({
+        ...prev,
+        mode: { adjustableHand: type },
+      }));
     }
   };
 
   useEffect(() => {
-    if (!isClockAdjustable(clockState)) {
-      setShouldFlash(false);
-    } else if (
-      type === HandType.Hour &&
-      clockState.mode !== ClockAdjustable.Hour
-    ) {
-      setShouldFlash(false);
-    } else if (
-      type === HandType.Minute &&
-      clockState.mode !== ClockAdjustable.Minute
-    ) {
-      setShouldFlash(false);
-    } else if (
-      type === HandType.Second &&
-      clockState.mode !== ClockAdjustable.Second
-    ) {
-      setShouldFlash(false);
-    } else {
-      setShouldFlash(true);
-    }
+    const shouldFlash =
+      isClockAdjustable(clockState.mode) &&
+      clockState.mode.adjustableHand === type;
+    setShouldFlash(shouldFlash);
   }, [clockState, type]);
 
   return (

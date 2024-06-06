@@ -59,7 +59,7 @@ function AnalogClock({
           zIndex={30}
           clockSize={clockSize}
           textColor={textColor}
-          showMinute={isClockAdjustable(clockState)}
+          showMinute={isClockAdjustable(clockState.mode)}
         />
       </AnalogClockFrame>
     </AnalogClockContainer>

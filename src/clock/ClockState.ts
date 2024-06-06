@@ -55,15 +55,17 @@ export function Backward(time: TimeState, unit: HandType): TimeState {
   }
 }
 
-export enum ClockAdjustable {
-  Hour,
-  Minute,
-  Second,
+export interface Adjustable {
+  adjustableHand: HandType
 }
 
-export type ClockPausedMode = "JustPaused" | ClockAdjustable
+export type ClockPaused = "JustPaused" | Adjustable
 
-export type ClockMode = "Running" | ClockPausedMode;
+export type ClockMode = "Running" | ClockPaused;
+
+export function isClockAdjustable(value: ClockMode): value is Adjustable {
+  return (value as Adjustable).adjustableHand !== undefined;
+}
 
 export interface ClockState extends TimeState {
   mode: ClockMode;
@@ -84,14 +86,6 @@ export const getInitialClockState = () => {
   }
 
   return DefaultClockState;
-}
-
-export function isClockAdjustable(clockState: ClockState): boolean {
-  return (
-    clockState.mode === ClockAdjustable.Hour || 
-    clockState.mode === ClockAdjustable.Minute || 
-    clockState.mode === ClockAdjustable.Second
-  );
 }
 
 export function getClockHandDegreeFromTime(time: TimeState): {

@@ -8,7 +8,7 @@ import { isClockAdjustable } from "./ClockState";
 
 function DigitalClock(): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
-  const isAdjustable = isClockAdjustable(clockState);
+  const isAdjustable = isClockAdjustable(clockState.mode);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <TimeField
