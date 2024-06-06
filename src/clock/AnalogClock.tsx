@@ -8,13 +8,14 @@ import AnalogClockContainer from "./AnalogClockContainer";
 import { isClockAdjustable } from "./ClockState";
 import { ClockConfig } from "./ClockConfig";
 import { ClockImageUrls } from "../resource/BackgroundImages";
+import { ClockUserMode } from "./ClockUserMode";
 
 function AnalogClock({
   clockConfig,
   clockUserMode,
 }: {
   clockConfig: ClockConfig;
-  clockUserMode: "Setup" | "Live" | "Static";
+  clockUserMode: ClockUserMode;
 }): React.JSX.Element {
   const {
     clockSize,
