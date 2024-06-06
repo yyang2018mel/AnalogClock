@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import { Backward, Forward, isClockAdjustable } from "./ClockState";
+import { isClockAdjustable } from "./ClockState";
+import { Backward, Forward } from "./TimeState";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { HandType } from "./AnalogClockHand";
