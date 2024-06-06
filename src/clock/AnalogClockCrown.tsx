@@ -5,10 +5,10 @@ import {
   ClockAdjustable,
   Forward,
   isClockAdjustable,
-  TimeUnit,
 } from "./ClockState";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { HandType } from "./AnalogClockHand";
 
 function Triangle({
   direction,
@@ -21,12 +21,12 @@ function Triangle({
   const handleMouseDown = () => {
     setClockState((prev) => {
       if (!isClockAdjustable(prev)) return prev;
-      const unit: TimeUnit =
+      const unit: HandType =
         prev.mode === ClockAdjustable.Hour
-          ? "hour"
+          ? HandType.Hour
           : prev.mode === ClockAdjustable.Minute
-          ? "minute"
-          : "second";
+          ? HandType.Minute
+          : HandType.Second;
       const newTime =
         direction === "up" ? Backward(prev, unit) : Forward(prev, unit);
       return { ...prev, ...newTime };

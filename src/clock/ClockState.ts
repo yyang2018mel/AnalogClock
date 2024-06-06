@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { HandType } from "./AnalogClockHand";
 
 export interface TimeState {
   hour: number;
@@ -6,14 +7,12 @@ export interface TimeState {
   second: number;
 }
 
-export type TimeUnit = "hour" | "minute" | "second"
+export function Forward(time: TimeState, unit: HandType): TimeState {
 
-export function Forward(time: TimeState, unit: TimeUnit): TimeState {
-
-  if (unit === "hour") {
+  if (unit === HandType.Hour) {
     const newHour = time.hour + 1;
     return { hour: newHour % 12, minute: time.minute, second: time.second };
-  } else if (unit === "minute") {
+  } else if (unit === HandType.Minute) {
     const newMinute = time.minute + 1;
     const newHour = newMinute === 60 ? (time.hour + 1) % 12 : time.hour;
     return { hour: newHour, minute: newMinute % 60, second: time.second };
@@ -25,12 +24,12 @@ export function Forward(time: TimeState, unit: TimeUnit): TimeState {
   }
 }
 
-export function Backward(time: TimeState, unit: TimeUnit): TimeState {
-  if (unit === "hour") {
+export function Backward(time: TimeState, unit: HandType): TimeState {
+  if (unit === HandType.Hour) {
     const newHour = time.hour - 1;
     return { hour: newHour < 0 ? 11 : newHour, minute: time.minute, second: time.second};
   }
-  else if (unit === "minute") {  
+  else if (unit === HandType.Minute) {  
     const newMinute = time.minute === 0 ? 59 : time.minute - 1;
     const newHour = newMinute === 59
                     ? time.hour === 0

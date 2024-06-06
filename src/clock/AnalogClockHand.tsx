@@ -7,7 +7,7 @@ import {
 } from "./ClockState";
 import styled, { css, keyframes } from "styled-components";
 
-enum HandType {
+export enum HandType {
   Hour,
   Minute,
   Second,
@@ -139,5 +139,4 @@ const makeHandStyle = (
   };
 };
 
-export { HandType };
 export default AnalogClockHand;
