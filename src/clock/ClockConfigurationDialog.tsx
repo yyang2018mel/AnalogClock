@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { ClockImageUrls } from "./BackgroundImages";
+import { ClockImageUrls } from "../resource/BackgroundImages";
 import {
   Accordion,
   AccordionDetails,
