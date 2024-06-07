@@ -17,7 +17,9 @@ const createFlashAnimation = (color: string) => keyframes`
 `;
 
 // Create a styled div that uses the animation
-const FlashableDiv = styled.div<{ isflashing: boolean; color: string }>`
+const FlashableDiv = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isflashing", // prevent isflashing to be passed onto the DOM, which causes a console error
+})<{ isflashing: boolean; color: string }>`
   ${(props) =>
     props.isflashing
       ? css`
