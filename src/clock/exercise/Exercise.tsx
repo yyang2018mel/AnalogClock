@@ -1,4 +1,6 @@
 import {
+  Accordion,
+  AccordionSummary,
   Box,
   Button,
   Dialog,
@@ -7,8 +9,9 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import Confirmation from "../generic/Confirmation";
+import React, { useEffect, useState } from "react";
+import Confirmation from "../../generic/Confirmation";
+import ExerciseSetup from "./ExerciseSetup";
 
 enum ExercisePageMode {
   Setup,
@@ -33,6 +36,10 @@ function Exercise({
   ];
 
   const [mode, setMode] = useState<ExercisePageMode>(pages[0]);
+
+  useEffect(() => {
+    setMode(pages[0]);
+  }, [open]);
 
   const [isExiting, setIsExiting] = useState<boolean>(false);
 
@@ -64,6 +71,8 @@ function Exercise({
               onClose();
             }}
           />
+        ) : mode === ExercisePageMode.Setup ? (
+          <ExerciseSetup />
         ) : (
           [ExercisePageMode[mode]]
         )}

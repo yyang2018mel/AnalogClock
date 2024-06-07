@@ -12,11 +12,13 @@ import {
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ScienceIcon from "@mui/icons-material/Science";
+import QuizIcon from "@mui/icons-material/Quiz";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { ClockConfig, getInitialClockConfig } from "./ClockConfig";
 import ClockConfigurationDialog from "./ClockConfigurationDialog";
 import Cookies from "js-cookie";
 import { ClockUserMode, getInitialClockUserMode } from "./ClockUserMode";
+import Exercise from "./exercise/Exercise";
 
 function ClockCombo(): React.JSX.Element {
   const [clockState, setClockState] =
@@ -26,9 +28,13 @@ function ClockCombo(): React.JSX.Element {
     getInitialClockConfig
   );
 
-  const [clockUserMode, setClockUserMode] = useState<ClockUserMode>(
-    getInitialClockUserMode
-  );
+  const [clockUserMode, setClockUserMode] = useState<ClockUserMode>(() => {
+    const potentialInit = getInitialClockUserMode();
+    if (potentialInit !== "Setup" && potentialInit !== "Exercise")
+      return potentialInit;
+
+    return "Static";
+  });
 
   const clockUserModeBeforeConfig = useRef<ClockUserMode>(clockUserMode);
 
@@ -37,7 +43,7 @@ function ClockCombo(): React.JSX.Element {
       expires: 1,
     });
 
-    if (clockUserMode !== "Setup") {
+    if (clockUserMode !== "Setup" && clockUserMode !== "Exercise") {
       Cookies.set("clockUserModeCookie", clockUserMode, { expires: 1 });
     }
 
@@ -110,6 +116,7 @@ function ClockCombo(): React.JSX.Element {
         commitClockConfig={commitClockConfig}
         onClose={closeDialog}
       />
+      <Exercise open={clockUserMode === "Exercise"} onClose={closeDialog} />
 
       <BottomNavigation
         showLabels
@@ -136,6 +143,11 @@ function ClockCombo(): React.JSX.Element {
           label="Static"
           value="Static"
           icon={<ScienceIcon />}
+        />
+        <BottomNavigationAction
+          label="Exercise"
+          value="Exercise"
+          icon={<QuizIcon />}
         />
       </BottomNavigation>
     </Box>
