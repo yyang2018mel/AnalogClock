@@ -17,9 +17,9 @@ const createFlashAnimation = (color: string) => keyframes`
 `;
 
 // Create a styled div that uses the animation
-const FlashableDiv = styled.div<{ isFlashing: boolean; color: string }>`
+const FlashableDiv = styled.div<{ isflashing: boolean; color: string }>`
   ${(props) =>
-    props.isFlashing
+    props.isflashing
       ? css`
           animation: ${createFlashAnimation(props.color)} 0.5s infinite;
         `
@@ -80,7 +80,7 @@ function AnalogClockHand({
 
   return (
     <FlashableDiv
-      isFlashing={shouldFlash}
+      isflashing={shouldFlash}
       color={handColor}
       onDoubleClick={onDoubleClick}
       style={{
