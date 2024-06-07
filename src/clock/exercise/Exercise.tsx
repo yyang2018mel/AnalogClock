@@ -1,6 +1,4 @@
 import {
-  Accordion,
-  AccordionSummary,
   Box,
   Button,
   Dialog,
@@ -12,6 +10,17 @@ import {
 import React, { useEffect, useState } from "react";
 import Confirmation from "../../generic/Confirmation";
 import ExerciseSetup from "./ExerciseSetup";
+import Slide from "@mui/material/Slide";
+import { TransitionProps } from "@mui/material/transitions";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 enum ExercisePageMode {
   Setup,
@@ -51,12 +60,28 @@ function Exercise({
   const nextMode = getNextMode();
 
   return (
-    <Dialog open={open} fullScreen={true}>
+    <Dialog open={open} fullScreen={true} TransitionComponent={Transition}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <DialogTitle>{`Exercise - ${getModeDisplay(mode)}`}</DialogTitle>
         <DialogActions>
-          <Button size="small" onClick={() => setIsExiting(true)}>
-            <Typography variant="caption">Reset</Typography>
+          <Button
+            size="small"
+            variant="contained"
+            disabled={!nextMode}
+            onClick={() => {
+              if (nextMode) setMode(nextMode);
+            }}
+          >
+            <Typography variant="caption">
+              {[ExercisePageMode[nextMode ?? mode]]}
+            </Typography>
+          </Button>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => setIsExiting(true)}
+          >
+            <Typography variant="caption">Close</Typography>
           </Button>
         </DialogActions>
       </Box>
@@ -77,18 +102,6 @@ function Exercise({
           [ExercisePageMode[mode]]
         )}
       </DialogContent>
-      <DialogActions>
-        <Button
-          disabled={!nextMode}
-          onClick={() => {
-            if (nextMode) setMode(nextMode);
-          }}
-        >
-          <Typography variant="caption">
-            {[ExercisePageMode[nextMode ?? mode]]}
-          </Typography>
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }
