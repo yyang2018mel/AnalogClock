@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ClockContext } from "./Context";
-import { getClockHandDegreeFromTime, isClockAdjustable } from "./ClockState";
+import {
+  ClockState,
+  getClockHandDegreeFromTime,
+  isClockAdjustable,
+} from "./ClockState";
 import styled, { css, keyframes } from "styled-components";
 
 export enum HandType {
@@ -30,6 +34,57 @@ const FlashableDiv = styled.div.withConfig({
         `};
 `;
 
+export function AnalogClockHandView({
+  type,
+  zIndex,
+  handColor,
+  clockSize,
+  clockState,
+  shouldFlash = false,
+  onDoubleClick,
+}: {
+  type: HandType;
+  zIndex: number;
+  handColor: string;
+  clockSize: number;
+  clockState: ClockState;
+  shouldFlash: boolean;
+  onDoubleClick?: () => void;
+}): React.JSX.Element {
+  const handLength =
+    (type === HandType.Hour
+      ? clockSize / 3
+      : type === HandType.Minute
+      ? clockSize / 2.5
+      : clockSize / 2.4) * 0.9;
+
+  const handWidth = type === HandType.Hour ? 12 : 8;
+
+  const handOpacity: number = type === HandType.Second ? 0.6 : 1.0;
+
+  const handDegree =
+    type === HandType.Hour
+      ? getClockHandDegreeFromTime(clockState).hourHandDegree
+      : type === HandType.Minute
+      ? getClockHandDegreeFromTime(clockState).minuteHandDegree
+      : type === HandType.Second
+      ? getClockHandDegreeFromTime(clockState).secondHandDegree
+      : 0;
+
+  return (
+    <FlashableDiv
+      isflashing={shouldFlash}
+      color={handColor}
+      onDoubleClick={onDoubleClick}
+      style={{
+        ...makeHandStyle(handColor, handLength, handWidth, handOpacity),
+        transform: `rotate(${handDegree}deg)`,
+        zIndex: zIndex,
+      }}
+    ></FlashableDiv>
+  );
+}
+
 function AnalogClockHand({
   type,
   zIndex,
@@ -43,28 +98,8 @@ function AnalogClockHand({
 }): React.JSX.Element {
   const { clockState, setClockState } = React.useContext(ClockContext)!;
   const [shouldFlash, setShouldFlash] = useState<boolean>(false);
-  const handOpacity: number = type === HandType.Second ? 0.6 : 1.0;
-  const handLength =
-    (type === HandType.Hour
-      ? clockSize / 3
-      : type === HandType.Minute
-      ? clockSize / 2.5
-      : clockSize / 2.4) * 0.9;
-
-  const handWidth = type === HandType.Hour ? 12 : 8;
-
-  const handDegree =
-    type === HandType.Hour
-      ? getClockHandDegreeFromTime(clockState).hourHandDegree
-      : type === HandType.Minute
-      ? getClockHandDegreeFromTime(clockState).minuteHandDegree
-      : type === HandType.Second
-      ? getClockHandDegreeFromTime(clockState).secondHandDegree
-      : 0;
-
   const onDoubleClick = () => {
     if (!isClockAdjustable(clockState.mode)) return;
-
     if (clockState.mode.adjustableHand !== type) {
       setClockState((prev) => ({
         ...prev,
@@ -81,16 +116,15 @@ function AnalogClockHand({
   }, [clockState, type]);
 
   return (
-    <FlashableDiv
-      isflashing={shouldFlash}
-      color={handColor}
+    <AnalogClockHandView
+      type={type}
+      zIndex={zIndex}
+      handColor={handColor}
+      clockSize={clockSize}
+      clockState={clockState}
+      shouldFlash={shouldFlash}
       onDoubleClick={onDoubleClick}
-      style={{
-        ...makeHandStyle(handColor, handLength, handWidth, handOpacity),
-        transform: `rotate(${handDegree}deg)`,
-        zIndex: zIndex,
-      }}
-    ></FlashableDiv>
+    />
   );
 }
 
